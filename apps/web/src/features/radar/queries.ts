@@ -194,21 +194,27 @@ function readSignalSummary(record: Record<string, unknown> | null, domain: Knowl
   const summary = readString(record, "summary");
   const whyItMatters = readString(record, "whyItMatters") ?? readString(record, "whyInteresting");
 
-  if (site.locale === "zh-CN" && summary && /[\u4e00-\u9fff]/.test(summary)) {
+  if (site.locale === "zh-CN" && summary && isReadableSummary(summary)) {
     return summary;
   }
 
-  return whyItMatters ?? domainFallbackSummary[domain] ?? summary;
+  return (whyItMatters && isReadableSummary(whyItMatters))
+    ? whyItMatters
+    : domainFallbackSummary[domain] ?? summary;
+}
+
+function isReadableSummary(value: string) {
+  return /[\u4e00-\u9fff]/.test(value) && !/进\s*入\s*视\s*野/.test(value);
 }
 
 const domainFallbackSummary: Record<KnowledgeDomain, string> = {
-  CODE: "一个外部开源或工程信号进入视野，适合继续评估其工具链价值。",
-  AI_MODELS: "一个 AI 或模型相关信号进入视野，适合继续判断其真实能力与可复用性。",
-  GAME_INTERACTION: "一个游戏与交互方向的信号进入视野，适合观察其原型和工具链潜力。",
-  HARDWARE_EMBEDDED: "一个硬件或嵌入式方向的信号进入视野，适合评估可复现性与实践价值。",
-  CREATIVE_MEDIA: "一个创作与媒体方向的信号进入视野，适合观察其工作流和表达潜力。",
-  SCIENCE_COSMOS: "一个科学与宇宙方向的信号进入视野，适合继续追踪其证据和想象力价值。",
-  GENERAL: "一个外部信号进入视野，适合继续判断是否值得社区讨论。"
+  CODE: "先看工具链价值：可运行性、维护状态、文档和社区采用。",
+  AI_MODELS: "先看真实能力：模型来源、评测证据、许可和本地可复用性。",
+  GAME_INTERACTION: "先看可玩性：机制、原型成本和能否转成工作室实验。",
+  HARDWARE_EMBEDDED: "先看可复现性：物料、成本、安全性和工程约束。",
+  CREATIVE_MEDIA: "先看表达空间：工具链、声音/图形流程和作品转化。",
+  SCIENCE_COSMOS: "先看证据：来源、观测边界，以及它能打开的问题。",
+  GENERAL: "保留为线索，等待更多来源交叉验证。"
 };
 
 function readUrl(record: Record<string, unknown> | null, key: string) {

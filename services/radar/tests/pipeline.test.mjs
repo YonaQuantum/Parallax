@@ -11,7 +11,8 @@ import {
 import { runOfflinePipeline } from "../pipeline/offline.mjs";
 import {
   canonicalizeUrl,
-  createFingerprint
+  createFingerprint,
+  resolveExternalUrl
 } from "../pipeline/utils.mjs";
 import { rankCandidate } from "../rank/index.mjs";
 import { validateEventRelation, validateSignalCandidate } from "../schemas/index.mjs";
@@ -72,6 +73,13 @@ describe("Radar pipeline primitives", () => {
     assert.equal(
       canonicalizeUrl("https://EXAMPLE.com/path/?utm_source=x&ref=feed#section"),
       "https://example.com/path"
+    );
+  });
+
+  it("resolves relative external asset URLs", () => {
+    assert.equal(
+      resolveExternalUrl("/images/card.png", "https://example.org/posts/a"),
+      "https://example.org/images/card.png"
     );
   });
 
@@ -266,11 +274,11 @@ describe("Radar pipeline primitives", () => {
   it("extracts Open Graph image URLs from fetched pages", () => {
     const image = extractOpenGraphImage(`
       <html>
-        <head><meta property="og:image" content="https://images.example.org/card.png"></head>
+        <head><meta property="og:image" content="https://images.example.org/card.png?x=1&amp;y=2"></head>
       </html>
     `);
 
-    assert.equal(image, "https://images.example.org/card.png");
+    assert.equal(image, "https://images.example.org/card.png?x=1&y=2");
   });
 });
 

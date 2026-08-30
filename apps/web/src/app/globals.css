@@ -272,43 +272,67 @@ textarea {
 }
 
 .ap-signal-card-with-media {
-  padding-right: clamp(1.25rem, 23vw, 13rem);
+  padding-right: clamp(1.25rem, 28vw, 17rem);
 }
 
 .ap-signal-thumb {
   position: absolute;
-  inset: 1rem 1rem auto auto;
-  width: clamp(7rem, 18vw, 11rem);
-  aspect-ratio: 1.55;
-  clip-path: polygon(18% 0, 100% 0, 82% 100%, 0 100%);
-  border: 1px solid rgba(242, 245, 255, 0.14);
-  background:
-    linear-gradient(135deg, rgba(242, 245, 255, 0.12), transparent),
-    rgba(242, 245, 255, 0.045);
-  opacity: 0.72;
+  inset: 0 0 0 auto;
+  width: min(48%, 26rem);
+  opacity: 0.68;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
-  transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease;
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.2) 28%, rgba(0, 0, 0, 0.78) 68%, #000 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.2) 28%, rgba(0, 0, 0, 0.78) 68%, #000 100%);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.ap-signal-thumb::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(7, 8, 13, 0), rgba(7, 8, 13, 0.28)),
+    radial-gradient(circle at 80% 50%, rgba(242, 245, 255, 0.16), transparent 58%);
 }
 
 .ap-signal-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.75) contrast(1.08) brightness(0.78);
-  transform: scale(1.04);
+  filter: saturate(0.78) contrast(1.08) brightness(0.72);
+  transform: scale(1.02);
   transition: filter 180ms ease, transform 180ms ease;
 }
 
-.ap-signal-card:hover .ap-signal-thumb {
-  border-color: rgba(255, 212, 0, 0.38);
-  opacity: 0.9;
-  transform: translate3d(-2px, 0, 0);
+.ap-signal-card:hover .ap-signal-thumb,
+.ap-observatory-row:hover .ap-signal-thumb {
+  opacity: 0.82;
 }
 
-.ap-signal-card:hover .ap-signal-thumb img {
-  filter: saturate(0.98) contrast(1.12) brightness(0.88);
-  transform: scale(1.08);
+.ap-signal-card:hover .ap-signal-thumb img,
+.ap-observatory-row:hover .ap-signal-thumb img {
+  filter: saturate(0.92) contrast(1.12) brightness(0.8);
+  transform: scale(1.06);
+}
+
+.ap-observatory-row {
+  position: relative;
+  min-height: 10rem;
+  overflow: hidden;
+}
+
+.ap-observatory-row > :not(.ap-signal-thumb) {
+  position: relative;
+  z-index: 1;
+}
+
+.ap-observatory-row-with-media {
+  padding-right: clamp(1.25rem, 32vw, 22rem);
+}
+
+.ap-signal-thumb-row {
+  width: min(42%, 30rem);
 }
 
 .ap-liquid-glass {
@@ -500,14 +524,20 @@ textarea {
   }
 
   .ap-signal-card-with-media {
-    padding-top: 7.75rem;
-    padding-right: 1.25rem;
+    padding-right: clamp(1.25rem, 38vw, 8.5rem);
   }
 
   .ap-signal-thumb {
-    left: 1rem;
-    right: auto;
-    width: min(72%, 13rem);
+    width: min(70%, 17rem);
+    opacity: 0.38;
+  }
+
+  .ap-observatory-row-with-media {
+    padding-right: clamp(1rem, 38vw, 9rem);
+  }
+
+  .ap-signal-thumb-row {
+    width: min(72%, 20rem);
   }
 }
 

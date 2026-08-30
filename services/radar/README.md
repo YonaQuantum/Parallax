@@ -127,7 +127,7 @@ RADAR_LLM_MODEL=deepseek-chat
 
 LLM 可随时关闭。关闭后 Radar 仍会执行收集、标准化、去重、预过滤、启发式分类和排序，只是摘要与语义标签会更朴素。
 
-缩略图只保存外部 URL，用于前端 Signal 卡片展示。Radar 不下载、不镜像外部图片。
+缩略图只保存外部 URL，用于前端 Signal 卡片展示。RSS 来源建议启用 `fetchContent`，这样 Radar 会在去重和预过滤后补抓原文页的 Open Graph / Twitter Card 图片；Radar 不下载、不镜像外部图片。
 
 写入一次真实资料：
 

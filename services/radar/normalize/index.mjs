@@ -3,9 +3,9 @@ import {
   clampText,
   compactText,
   createFingerprint,
-  normalizeExternalUrl,
   normalizeTitle,
   parseDate,
+  resolveExternalUrl,
   uniqueTags
 } from "../pipeline/utils.mjs";
 
@@ -16,11 +16,12 @@ export function normalizeRadarItem(source, item) {
   const content = clampText(item.rawText ?? item.summary ?? title, 6000);
   const rawMetadata = item.metadata ?? {};
   const metrics = normalizeMetrics(rawMetadata);
-  const thumbnailUrl = normalizeExternalUrl(
+  const thumbnailUrl = resolveExternalUrl(
     item.thumbnailUrl ??
     rawMetadata.thumbnailUrl ??
     rawMetadata.image ??
-    rawMetadata.ogImage
+    rawMetadata.ogImage,
+    item.url
   );
   const fingerprint = createFingerprint([
     normalizeTitle(title),
