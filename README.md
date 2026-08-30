@@ -1,6 +1,6 @@
 # PARALLAX
 
-PARALLAX（异视社区）是一个开源、自托管的综合技术社区。它面向文档、文章、视频、图文、讨论、外部 Signal 和社区扩展，目标是让社区成员既能贡献内容，也能参与构建社区本体。
+PARALLAX（视差社区）是一个开源、自托管的综合技术社区。它面向文档、文章、视频、图文、讨论、外部 Signal 和社区扩展，目标是让社区成员既能贡献内容，也能参与构建社区本体。
 
 项目采用 monorepo 组织。第一阶段保持可单机部署，同时为后续拆分 Web、API、Radar、数据库包和共享组件保留清晰边界。
 
@@ -110,6 +110,17 @@ npm run db:deploy        # 生产迁移
 npm run db:seed          # 初始化站点所有者和基础领域时钟
 npm run radar:dry-run    # 抓取真实来源但不写库
 npm run radar:once       # 抓取并写入一次 Radar 数据
+```
+
+## 协作约定
+
+开发者和 AI 协作者应先阅读 [docs/development-handbook.md](docs/development-handbook.md)。项目约定、已知迁移项、提交身份、提交信息格式和敏感信息扫描都记录在那里。
+
+提交信息建议使用 `type: 中文说明`，例如：
+
+```txt
+docs: 更新 Radar 接口说明
+fix: 修复邮箱验证过期判断
 ```
 
 ## Radar 接入

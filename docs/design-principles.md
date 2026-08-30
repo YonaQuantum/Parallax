@@ -1,6 +1,6 @@
 # PARALLAX 设计原则
 
-PARALLAX（异视社区）是一个克制、开放、理性、带有研究机构气质的技术社区。
+PARALLAX（视差社区）是一个克制、开放、理性、带有研究机构气质的技术社区。
 
 它不追求赛博朋克 UI，不追求 Dashboard 感。页面首先依赖 typography、spacing、hierarchy、composition，而不是依赖 card、border、badge、gradient、icon、status panel。
 
