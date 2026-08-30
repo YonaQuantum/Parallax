@@ -15,9 +15,12 @@
   "models": {
     "chat": {
       "provider": "openai-compatible",
-      "baseUrlEnv": "LOCAL_LLM_BASE_URL",
-      "apiKeyEnv": "LOCAL_LLM_API_KEY",
-      "model": "qwen-or-llama-local"
+      "enabled": false,
+      "baseUrlEnv": "RADAR_LLM_BASE_URL",
+      "apiKeyEnv": "RADAR_LLM_API_KEY",
+      "model": "deepseek-chat",
+      "timeoutMs": 20000,
+      "temperature": 0.2
     },
     "embedding": {
       "provider": "openai-compatible",

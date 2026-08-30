@@ -14,6 +14,17 @@
       "tokenEnv": "GITHUB_TOKEN"
     }
   },
+  "models": {
+    "chat": {
+      "provider": "openai-compatible",
+      "enabled": false,
+      "baseUrlEnv": "RADAR_LLM_BASE_URL",
+      "apiKeyEnv": "RADAR_LLM_API_KEY",
+      "model": "deepseek-chat",
+      "timeoutMs": 20000,
+      "temperature": 0.2
+    }
+  },
   "sources": [
     {
       "id": "github-hot-projects",

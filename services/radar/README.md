@@ -53,8 +53,8 @@ Linux 主机
 
 1. 稳定抓取。
 2. 可靠去重。
-3. 能判断信息是否有趣、有用、过时或噪声。
-4. 能把资料拆成语法流、符号流、语义流。
+3. 程序完成标准化、精确去重、预过滤和透明排序。
+4. LLM 只负责语义理解：分类、主题、摘要、关注理由、新颖度和编辑兴趣。
 5. 能给首页和观测台输出真实 World Signals。
 
 训练和微调放到后面，等真实数据积累起来再决定是否必要。
@@ -89,6 +89,18 @@ PARALLAX_BASE_URL=http://127.0.0.1:3000
 GITHUB_TOKEN=可选，但建议配置
 ```
 
+可选启用 OpenAI-compatible LLM：
+
+```txt
+RADAR_LLM_ENABLED=true
+RADAR_LLM_PROVIDER=openai-compatible
+RADAR_LLM_BASE_URL=https://api.deepseek.com
+RADAR_LLM_API_KEY=只放在运行环境
+RADAR_LLM_MODEL=deepseek-chat
+```
+
+LLM 可随时关闭。关闭后 Radar 仍会执行收集、标准化、去重、预过滤、启发式分类和排序，只是摘要与语义标签会更朴素。
+
 写入一次真实资料：
 
 ```bash
@@ -111,6 +123,11 @@ services/radar/
   config.example.json
   config.local.example.json
   runner.mjs
+  fetch/
+  llm/
+  pipeline/
+  schemas/
+  storage/
   docs/
     architecture.md
     deployment-workstation.md

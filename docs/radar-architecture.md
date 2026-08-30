@@ -10,9 +10,14 @@ services/radar/
   collector/        抓取与速率控制
   normalize/        结构标准化、正文清洗、链接归一化
   dedupe/           去重、相似项合并、历史游标
+  fetch/            正文获取、网页清洗、内容边界控制
+  llm/              可拔掉的语义理解 provider、prompt 和结构化增强
+  pipeline/         collect -> normalize -> dedupe -> enrich -> rank
+  schemas/          RadarItem、SignalCandidate 等数据契约
   classify/         领域分类、跨领域标签、质量解释
   rank/             Signal 排序、新鲜度、热度、来源可信度
   summarize/        摘要、可读标题、人工接管建议
+  storage/          本地缓存、游标、索引和临时状态
   runner.mjs        第一阶段最小可运行采集进程
   config.example.json
   config.local.example.json
@@ -23,18 +28,91 @@ services/radar/
 ## 数据流
 
 ```txt
-source schedule
-  -> collect raw item
-  -> normalize
-  -> dedupe by stable externalId
-  -> classify domain and tags
-  -> rank by freshness, quality, source trust and community fit
-  -> summarize without copying full text
-  -> POST /api/radar/ingest
-  -> optional POST /api/radar/signals
+互联网
+  -> Sources
+  -> Collector
+  -> Normalize
+  -> Exact Dedupe
+  -> Pre-filter
+  -> Content Fetch
+  -> LLM Enrich
+  -> Semantic Cluster
+  -> Rank
+  -> Signal
+  -> Parallax 首页
 ```
 
-社区内部新内容和 Radar 外部条目在首页 `New` 合流。排序以新鲜度和质量为主，并保持六大领域的曝光均衡。
+程序负责事实，LLM 负责理解。
+
+不使用 LLM 完成 HTTP 获取、RSS 解析、日期解析、URL 归一化、GitHub stars 统计、精确去重、调度、缓存、重试、限流和基础 ranking。LLM 只用于分类、topics、短摘要、关注理由、新颖度、编辑兴趣，以及模糊情况下的同事件判断。
+
+社区内部新内容和 Radar 外部条目在首页 `New` 合流。排序以新鲜度、增长动量、来源质量、新颖度、社区适配度和编辑兴趣为主，并保持六大领域的曝光均衡。
+
+## 核心数据对象
+
+抓到的信息不是 Signal。Radar 先把不同来源统一成 `RadarItem`：
+
+```ts
+type RadarItem = {
+  id: string;
+  source: string;
+  sourceType: string;
+  title: string;
+  url?: string;
+  canonicalUrl: string;
+  author?: string;
+  publishedAt?: string;
+  fetchedAt: string;
+  excerpt?: string;
+  content?: string;
+  metrics?: {
+    stars?: number;
+    starsDelta24h?: number;
+    downloads?: number;
+    comments?: number;
+    score?: number;
+  };
+  rawMetadata: unknown;
+  fingerprint: string;
+};
+```
+
+经过预过滤和语义增强后生成 `SignalCandidate`：
+
+```ts
+type SignalCandidate = {
+  itemId: string;
+  category: "code" | "ai" | "game" | "hardware" | "create" | "science";
+  topics: string[];
+  summary: string;
+  whyItMatters: string;
+  novelty: number;
+  editorialInterest: number;
+  confidence: number;
+  language: string;
+  evidence: string[];
+  duplicateOf?: string;
+  flags: string[];
+};
+```
+
+只有通过 ranking 的候选才进入首页展示。
+
+## 透明排序
+
+第一阶段使用可解释公式，不把排序完全交给模型：
+
+```txt
+SignalScore =
+  0.25 * Recency
++ 0.20 * Momentum
++ 0.15 * SourceQuality
++ 0.15 * Novelty
++ 0.15 * CommunityFit
++ 0.10 * EditorialInterest
+```
+
+`Recency`、`Momentum` 和 `SourceQuality` 由程序计算；`Novelty` 和 `EditorialInterest` 可以由 LLM 辅助，但必须保留输入证据和置信度。
 
 ## 六大领域
 
@@ -56,6 +134,18 @@ source schedule
 - 给出人工接管建议。
 
 这样即使模型服务暂时不可用，Radar 仍能抓取和写入基础 Signal。
+
+LLM provider 使用 OpenAI-compatible 抽象：
+
+```txt
+RADAR_LLM_ENABLED=true
+RADAR_LLM_PROVIDER=openai-compatible
+RADAR_LLM_BASE_URL=https://api.deepseek.com
+RADAR_LLM_API_KEY=只放在运行环境
+RADAR_LLM_MODEL=deepseek-chat
+```
+
+关闭 `RADAR_LLM_ENABLED` 时，Radar 必须继续可运行。
 
 ## GitHub 个人页同步
 
