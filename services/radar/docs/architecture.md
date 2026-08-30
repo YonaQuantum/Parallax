@@ -17,11 +17,14 @@ load config
   -> heartbeat
   -> pull tasks
   -> tick sources by independent clocks
-  -> fetch raw documents
-  -> normalize and dedupe
-  -> score novelty, relevance, momentum, quality
-  -> split streams
-  -> summarize or derive skeletons
+  -> collect raw items
+  -> normalize RadarItem
+  -> exact dedupe by externalId, canonical URL and fingerprint
+  -> pre-filter
+  -> fetch content within copyright boundaries
+  -> optional LLM enrich
+  -> semantic cluster
+  -> transparent rank
   -> ingest artifact
   -> emit world signal
   -> persist local RAG index
@@ -33,9 +36,14 @@ load config
 - `collector`：抓取、速率限制、失败重试、来源心跳。
 - `normalize`：正文抽取、语言判断、代码块提取、公式提取、链接归一化。
 - `dedupe`：稳定外部 ID、相似项合并、历史游标。
+- `fetch`：正文获取、HTML 到 clean text / Markdown、版权边界控制。
+- `llm`：OpenAI-compatible provider、结构化语义增强、同事件判断 prompt。
+- `pipeline`：组织 collect、normalize、dedupe、pre-filter、enrich、rank、publish。
+- `schemas`：RadarItem、SignalCandidate、Signal 等结构契约。
 - `classify`：六大领域分类、跨领域标签、质量解释。
 - `rank`：新颖度、相关性、来源质量、增长动量、社区兴趣、领域多样性。
 - `summarize`：短摘要、可读标题、人工接管建议。
+- `storage`：本地缓存、游标、索引、临时状态和后续 RAG 存储。
 - `publisher`：调用 PARALLAX `/api/radar/*` 接口回写。
 - `scheduler`：不同来源独立心跳，不强行统一刷新频率。
 
@@ -48,6 +56,8 @@ load config
 - 低质内容标记为 `GRAY_NOISE`，严重垃圾标记为 `BLOCKED`。
 - 对“好玩”的判断必须可解释：为什么值得看、和哪个板块有关、适合谁继续探索。
 - Signal 是外部事件的解释层，不是 PARALLAX 自己编造的信息源。
+- 程序负责事实，LLM 负责理解。LLM 不参与 HTTP 获取、精确去重、日期解析、调度、限流和基础 ranking。
+- LLM 必须可关闭；关闭后 Radar 仍可用启发式摘要、分类和排序继续运行。
 
 ## GPU 工作站的职责
 
