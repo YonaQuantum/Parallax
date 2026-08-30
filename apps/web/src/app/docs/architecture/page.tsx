@@ -17,7 +17,7 @@ const items = [
     accent: "var(--blue)"
   },
   {
-    title: "AURA 身份",
+    title: "身份卡",
     text: "月光卡和白卡进入账号体系，成员主页通过身份卡展开。",
     icon: IdCard,
     accent: "var(--purple)"

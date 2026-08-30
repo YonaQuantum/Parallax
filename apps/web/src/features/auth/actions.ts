@@ -3,7 +3,7 @@
 import { compare, hash } from "bcryptjs";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { generateNextAuraSerial, generateUniqueAuraCode } from "@/features/aura/id";
+import { generateNextIdentitySerial, generateUniqueIdentityCode } from "@/features/identity/id";
 import { sendAccountVerification } from "@/features/auth/email-verification";
 import { createSession } from "@/server/auth";
 import { prisma } from "@/server/db/prisma";
@@ -64,9 +64,9 @@ export async function registerAction(
     };
   }
 
-  const [auraCode, auraSerial, passwordHash] = await Promise.all([
-    generateUniqueAuraCode(),
-    generateNextAuraSerial(),
+  const [identityCode, identitySerial, passwordHash] = await Promise.all([
+    generateUniqueIdentityCode(),
+    generateNextIdentitySerial(),
     hash(password, 12)
   ]);
 
@@ -76,11 +76,11 @@ export async function registerAction(
       handle,
       email,
       passwordHash,
-      auraIdentity: {
+      identityCard: {
         create: {
-          serial: auraSerial,
-          code: auraCode,
-          generationVersion: "aura-id-tool-v0",
+          serial: identitySerial,
+          code: identityCode,
+          generationVersion: "identity-card-v1",
           displayName: name,
           handle,
           skills: [],
