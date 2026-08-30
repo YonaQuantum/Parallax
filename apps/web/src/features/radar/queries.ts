@@ -63,7 +63,6 @@ export async function getWorldSignals({
       interference: {
         not: KnowledgeInterference.BLOCKED
       },
-      deepArchivedAt: null,
       ...(keyword
         ? {
             OR: [

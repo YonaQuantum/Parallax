@@ -14,7 +14,6 @@ import {
   scoreInterference,
   splitKnowledgeStreams
 } from "@/server/radar/prism";
-import { recycleExternalArtifacts } from "@/server/radar/retention";
 import { upsertRadarResident } from "@/server/radar/residents";
 import { requireRadarAccess } from "@/server/radar/security";
 import { prisma } from "@/server/db/prisma";
@@ -55,8 +54,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid artifact" }, { status: 400 });
   }
 
-  await recycleExternalArtifacts();
-
   const radar = await upsertRadarResident({
     slug: parsed.data.slug
   });
@@ -68,10 +65,6 @@ export async function POST(request: Request) {
       : computeHeat(parsed.data.qualityScore);
   const freshnessUntil =
     heat >= 0.72 ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null;
-  const deepArchivedAt =
-    interference === KnowledgeInterference.BLOCKED || parsed.data.qualityScore < 0.25
-      ? new Date()
-      : null;
   const sourceUrl = parsed.data.source?.url ?? parsed.data.url;
   const source = sourceUrl
     ? await prisma.knowledgeSource.upsert({
@@ -112,8 +105,7 @@ export async function POST(request: Request) {
     heat,
     rawDigest: digestText(parsed.data.rawText),
     metadata: parsed.data.metadata as Prisma.InputJsonValue,
-    freshnessUntil,
-    deepArchivedAt
+    freshnessUntil
   };
   const streamData = streams.map((stream) => ({
     kind: stream.kind,
