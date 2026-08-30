@@ -1,4 +1,4 @@
-import { clampText, compactText, stripHtml } from "../pipeline/utils.mjs";
+import { clampText, compactText, decodeXml, resolveExternalUrl, stripHtml } from "../pipeline/utils.mjs";
 import { fetchText } from "../sources/http.mjs";
 
 const DEFAULT_CONTENT_LIMIT = 6000;
@@ -16,18 +16,28 @@ export async function fetchContentForItem(source, item, context = {}) {
   try {
     const html = await fetchText(new URL(item.url), context.userAgent);
     const extracted = extractReadableText(html, source.contentLimit ?? DEFAULT_CONTENT_LIMIT);
+    const thumbnailUrl = item.thumbnailUrl ?? resolveExternalUrl(extractOpenGraphImage(html), item.url);
 
     if (!extracted) {
-      return item;
+      return {
+        ...item,
+        thumbnailUrl,
+        rawMetadata: {
+          ...item.rawMetadata,
+          thumbnailUrl: item.rawMetadata?.thumbnailUrl ?? thumbnailUrl,
+          contentFetchedAt: new Date().toISOString(),
+          contentFetched: false
+        }
+      };
     }
 
     return {
       ...item,
       content: extracted,
-      thumbnailUrl: item.thumbnailUrl ?? extractOpenGraphImage(html),
+      thumbnailUrl,
       rawMetadata: {
         ...item.rawMetadata,
-        thumbnailUrl: item.rawMetadata?.thumbnailUrl ?? item.thumbnailUrl ?? extractOpenGraphImage(html),
+        thumbnailUrl: item.rawMetadata?.thumbnailUrl ?? thumbnailUrl,
         contentFetchedAt: new Date().toISOString(),
         contentFetched: true
       }
@@ -56,9 +66,9 @@ export function extractReadableText(html, limit = DEFAULT_CONTENT_LIMIT) {
 }
 
 export function extractOpenGraphImage(html) {
-  return metaContent(html, "property", "og:image") ||
+  return decodeXml(metaContent(html, "property", "og:image") ||
     metaContent(html, "name", "twitter:image") ||
-    "";
+    "");
 }
 
 function textOfTag(html, tag) {

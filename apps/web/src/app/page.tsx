@@ -129,11 +129,11 @@ function NewFeed({
                 {signal.time} / {signal.phase} / {signal.domain}
               </div>
               <h2 className="mt-3 line-clamp-3 text-xl font-medium leading-7 group-hover:text-[var(--yellow)]">
-                {signal.summary ?? signal.title}
+                {signal.title}
               </h2>
               {signal.summary ? (
                 <p className="mt-3 line-clamp-2 text-sm leading-6 text-white/52">
-                  {signal.title}
+                  {signal.summary}
                 </p>
               ) : null}
               <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-white/34">
@@ -180,6 +180,7 @@ function SignalThumbnail({ signal }: { signal: WorldSignal }) {
         referrerPolicy="no-referrer"
         sizes="(max-width: 720px) 72vw, 11rem"
         src={signal.thumbnailUrl ?? ""}
+        unoptimized
       />
     </span>
   );

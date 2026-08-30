@@ -114,7 +114,7 @@ const dictionaries: Record<SiteLocale, SiteCopy> = {
       fromCommunity: `From ${brandName}`,
       latest: "Latest",
       results: "Results",
-      signals: "Signals",
+      signals: "信号",
       tags: "Tags",
       observatory: "观测台",
       all: "全部"

@@ -1,7 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, Search } from "lucide-react";
 import { site } from "@/config/site";
-import { getWorldSignals } from "@/features/radar/queries";
+import { getWorldSignals, type WorldSignal } from "@/features/radar/queries";
 import { SpaceBackdrop, SubHeader } from "@/features/interface/chrome";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +18,7 @@ export default async function ObservatoryPage() {
       <div className="ap-container py-14 sm:py-20">
         <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
           <div>
-            <h1 className="text-5xl font-semibold leading-none sm:text-7xl">Observatory</h1>
+            <h1 className="text-5xl font-semibold leading-none sm:text-7xl">{site.copy.sections.observatory}</h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/60">
               展示 Radar 摄入、筛选并公开的外部信号，以及社区内部正在发生的新发布。
             </p>
@@ -32,7 +33,7 @@ export default async function ObservatoryPage() {
         </section>
 
         <section className="mt-16">
-          <SectionHead title="Signals" />
+          <SectionHead title={site.copy.sections.signals} />
           {signals.length > 0 ? (
             <div className="mt-5 divide-y divide-white/[0.06]">
               {signals.map((signal) => {
@@ -60,19 +61,21 @@ export default async function ObservatoryPage() {
 
                 return signal.href ? (
                   <a
-                    className="group grid gap-3 py-6 sm:grid-cols-[1fr_auto]"
+                    className={`ap-observatory-row group grid gap-3 py-6 sm:grid-cols-[1fr_auto] ${signal.thumbnailUrl ? "ap-observatory-row-with-media" : ""}`}
                     href={signal.href}
                     key={signal.id}
                     rel="noreferrer"
                     target="_blank"
                   >
+                    {signal.thumbnailUrl ? <SignalBackdropImage signal={signal} /> : null}
                     {content}
                   </a>
                 ) : (
                   <article
-                    className="group grid gap-3 py-6 sm:grid-cols-[1fr_auto]"
+                    className={`ap-observatory-row group grid gap-3 py-6 sm:grid-cols-[1fr_auto] ${signal.thumbnailUrl ? "ap-observatory-row-with-media" : ""}`}
                     key={signal.id}
                   >
+                    {signal.thumbnailUrl ? <SignalBackdropImage signal={signal} /> : null}
                     {content}
                   </article>
                 );
@@ -93,6 +96,21 @@ export default async function ObservatoryPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+function SignalBackdropImage({ signal }: { signal: WorldSignal }) {
+  return (
+    <span aria-hidden className="ap-signal-thumb ap-signal-thumb-row">
+      <Image
+        alt=""
+        fill
+        referrerPolicy="no-referrer"
+        sizes="(max-width: 720px) 70vw, 24rem"
+        src={signal.thumbnailUrl ?? ""}
+        unoptimized
+      />
+    </span>
   );
 }
 

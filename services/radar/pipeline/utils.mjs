@@ -44,6 +44,22 @@ export function normalizeExternalUrl(value) {
   }
 }
 
+export function resolveExternalUrl(value, baseUrl) {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    const url = baseUrl ? new URL(value, baseUrl) : new URL(value);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      return undefined;
+    }
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
 export function normalizeTitle(value) {
   return compactText(value).toLowerCase().replace(/[^\p{Letter}\p{Number}]+/gu, " ").trim();
 }

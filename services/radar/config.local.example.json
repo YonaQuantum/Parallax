@@ -71,6 +71,7 @@
       "tags": ["模型发布", "Hugging Face"],
       "enabled": true,
       "heartbeatSeconds": 21600,
+      "fetchContent": true,
       "feeds": [
         "https://huggingface.co/blog/feed.xml"
       ]
@@ -83,6 +84,7 @@
       "tags": ["游戏引擎", "Godot", "交互"],
       "enabled": true,
       "heartbeatSeconds": 21600,
+      "fetchContent": true,
       "feeds": [
         "https://godotengine.org/rss.xml"
       ]
@@ -95,6 +97,7 @@
       "tags": ["硬件", "嵌入式", "DIY"],
       "enabled": false,
       "heartbeatSeconds": 43200,
+      "fetchContent": true,
       "feeds": [
         "https://hackaday.com/blog/feed/"
       ]
@@ -107,6 +110,7 @@
       "tags": ["Blender", "3D", "创作工具"],
       "enabled": false,
       "heartbeatSeconds": 43200,
+      "fetchContent": true,
       "feeds": [
         "https://code.blender.org/feed/"
       ]
@@ -119,6 +123,7 @@
       "tags": ["NASA", "航天", "科学"],
       "enabled": true,
       "heartbeatSeconds": 43200,
+      "fetchContent": true,
       "feeds": [
         "https://www.nasa.gov/feed/"
       ]
@@ -131,6 +136,7 @@
       "tags": ["哲学", "宇宙生命", "思想"],
       "enabled": true,
       "heartbeatSeconds": 43200,
+      "fetchContent": true,
       "feeds": [
         "https://aeon.co/feed.rss"
       ]
