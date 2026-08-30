@@ -1,19 +1,19 @@
 import Image from "next/image";
-import { AuraCardVariant } from "@prisma/client";
+import { IdentityCardVariant } from "@prisma/client";
 import { BadgeCheck } from "lucide-react";
-import type { AuraProfile } from "@/features/aura/queries";
+import type { IdentityProfile } from "@/features/identity/queries";
 
-type AuraCardProps = {
-  profile: AuraProfile;
+type IdentityCardProps = {
+  profile: IdentityProfile;
   compact?: boolean;
 };
 
-export function AuraCard({ profile, compact = false }: AuraCardProps) {
+export function IdentityCard({ profile, compact = false }: IdentityCardProps) {
   const identity = profile.identity;
-  const isMoon = identity?.cardVariant === AuraCardVariant.MOON;
+  const isMoon = identity?.cardVariant === IdentityCardVariant.MOON;
   const avatar = identity?.avatarUrl ?? profile.user.image;
   const displayName = identity?.displayName ?? profile.user.name;
-  const auraHandle = identity?.handle ?? profile.user.handle;
+  const identityHandle = identity?.handle ?? profile.user.handle;
   const quote = identity?.quote ?? profile.user.bio;
   const skills = identity?.skills ?? [];
 
@@ -48,12 +48,12 @@ export function AuraCard({ profile, compact = false }: AuraCardProps) {
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-sm font-semibold tracking-[0.18em]">
-              <span>AURA</span>
+              <span>身份卡</span>
               <span className={isMoon ? "text-white/26" : "text-black/30"}>|</span>
-              <span>光环</span>
+              <span>Identity</span>
             </div>
             <div className={`mt-2 truncate font-mono text-xs ${isMoon ? "text-white/48" : "text-black/48"}`}>
-              {identity?.serial ?? "AURA"} · {auraHandle}
+              {identity?.serial ?? "PX"} · {identityHandle}
             </div>
           </div>
           {identity?.isFounder ? (
@@ -90,7 +90,7 @@ export function AuraCard({ profile, compact = false }: AuraCardProps) {
               {displayName}
             </h2>
             <div className={`mt-2 text-base ${isMoon ? "text-white/58" : "text-black/54"}`}>
-              @{auraHandle}
+              @{identityHandle}
             </div>
             {quote ? (
               <p className={`mt-4 line-clamp-3 text-sm leading-6 ${isMoon ? "text-white/62" : "text-black/62"}`}>

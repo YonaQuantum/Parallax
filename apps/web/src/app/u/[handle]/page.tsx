@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { BookOpen, CalendarDays, Code2, MessageSquare, RadioTower, Star } from "lucide-react";
-import { AuraCard } from "@/features/aura/aura-card";
-import { getProfileByHandle } from "@/features/aura/queries";
+import { IdentityCard } from "@/features/identity/identity-card";
+import { getProfileByHandle } from "@/features/identity/queries";
 import { SpaceBackdrop, SubHeader } from "@/features/interface/chrome";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export default async function ProfilePage({
 
       <div className="ap-container grid gap-6 py-7 lg:grid-cols-[minmax(0,1fr)_340px]">
         <section className="space-y-6">
-          <AuraCard profile={profile} />
+          <IdentityCard profile={profile} />
 
           <section className="ap-panel ap-cut p-5">
             <div className="flex items-center justify-between gap-4 border-b border-white/12 pb-3">
@@ -125,7 +125,7 @@ export default async function ProfilePage({
 
           {profile.identity ? (
             <section className="border border-[var(--yellow)]/42 bg-[var(--yellow)] p-5 text-[#07080d] ap-cut">
-              <h2 className="text-sm font-semibold">AURA IDENTITY</h2>
+              <h2 className="text-sm font-semibold">IDENTITY</h2>
               <div className="mt-4 space-y-3 text-sm">
                 <div className="flex items-center justify-between gap-3">
                   <span className="opacity-65">编号</span>

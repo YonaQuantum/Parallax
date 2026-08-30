@@ -1,6 +1,6 @@
 import {
-  AuraCardVariant,
-  AuraIdentityStatus,
+  IdentityCardVariant,
+  IdentityCardStatus,
   KnowledgeDomain,
   PrismaClient,
   UserRole
@@ -9,7 +9,7 @@ import { randomBytes, randomInt } from "node:crypto";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
-const AURA_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const IDENTITY_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 const removedDemoContentSlugs = [
   "self-hosted-community-stack",
@@ -73,31 +73,31 @@ async function seedOwner(input: {
           handle: input.handle
         }
       });
-  const existingIdentity = await prisma.auraIdentity.findUnique({
-    where: { serial: "AURA-0001" },
+  const existingIdentity = await prisma.identityCard.findUnique({
+    where: { serial: "PX-0001" },
     select: { code: true }
   });
 
-  await prisma.auraIdentity.upsert({
-    where: { serial: "AURA-0001" },
+  await prisma.identityCard.upsert({
+    where: { serial: "PX-0001" },
     update: {
       displayName: input.name,
       handle: user.handle,
-      status: AuraIdentityStatus.CLAIMED,
-      cardVariant: AuraCardVariant.MOON,
+      status: IdentityCardStatus.CLAIMED,
+      cardVariant: IdentityCardVariant.MOON,
       isFounder: true,
       userId: user.id
     },
     create: {
-      serial: "AURA-0001",
-      code: process.env.SEED_OWNER_AURA_CODE ?? existingIdentity?.code ?? generateAuraCode(),
-      generationVersion: "aura-id-v1",
+      serial: "PX-0001",
+      code: process.env.SEED_OWNER_IDENTITY_CODE ?? existingIdentity?.code ?? generateIdentityCode(),
+      generationVersion: "identity-card-v1",
       displayName: input.name,
       handle: user.handle,
       quote: "PARALLAX founder",
       skills: [],
-      status: AuraIdentityStatus.CLAIMED,
-      cardVariant: AuraCardVariant.MOON,
+      status: IdentityCardStatus.CLAIMED,
+      cardVariant: IdentityCardVariant.MOON,
       isFounder: true,
       userId: user.id
     }
@@ -146,13 +146,13 @@ async function cleanupDemoData() {
   });
 }
 
-function generateAuraCode() {
-  return Array.from({ length: 3 }, () => randomAuraSegment()).join("-");
+function generateIdentityCode() {
+  return Array.from({ length: 3 }, () => randomIdentitySegment()).join("-");
 }
 
-function randomAuraSegment() {
+function randomIdentitySegment() {
   const bytes = randomBytes(4);
-  return Array.from(bytes, () => AURA_ALPHABET[randomInt(AURA_ALPHABET.length)]).join("");
+  return Array.from(bytes, () => IDENTITY_ALPHABET[randomInt(IDENTITY_ALPHABET.length)]).join("");
 }
 
 main()

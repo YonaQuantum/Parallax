@@ -1,7 +1,7 @@
-import { AuraCardVariant, ContentStatus, type Prisma } from "@prisma/client";
+import { IdentityCardVariant, ContentStatus, type Prisma } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
 
-export type AuraProfile = {
+export type IdentityProfile = {
   user: {
     id: string;
     name: string;
@@ -20,7 +20,7 @@ export type AuraProfile = {
     handle: string;
     quote: string | null;
     skills: string[];
-    cardVariant: AuraCardVariant;
+    cardVariant: IdentityCardVariant;
     isFounder: boolean;
     avatarUrl: string | null;
     cardBackgroundUrl: string | null;
@@ -42,9 +42,9 @@ export type AuraProfile = {
   }[];
 };
 
-type AuraProfilePayload = Prisma.UserGetPayload<{
+type IdentityProfilePayload = Prisma.UserGetPayload<{
   include: {
-    auraIdentity: true;
+    identityCard: true;
     contents: {
       select: {
         slug: true;
@@ -73,10 +73,10 @@ type AuraProfilePayload = Prisma.UserGetPayload<{
   };
 }>;
 
-export async function getMemberProfiles(): Promise<AuraProfile[]> {
+export async function getMemberProfiles(): Promise<IdentityProfile[]> {
   const users = await prisma.user.findMany({
     include: {
-      auraIdentity: true,
+      identityCard: true,
       contents: {
         where: { status: ContentStatus.PUBLISHED },
         select: {
@@ -114,23 +114,23 @@ export async function getMemberProfiles(): Promise<AuraProfile[]> {
     orderBy: [{ role: "asc" }, { createdAt: "asc" }]
   });
 
-  return users.map(toAuraProfile);
+  return users.map(toIdentityProfile);
 }
 
-export async function getProfileByHandle(handle: string): Promise<AuraProfile | null> {
+export async function getProfileByHandle(handle: string): Promise<IdentityProfile | null> {
   const user = await prisma.user.findFirst({
     where: {
       OR: [
         { handle },
         {
-          auraIdentity: {
+          identityCard: {
             is: { handle }
           }
         }
       ]
     },
     include: {
-      auraIdentity: true,
+      identityCard: true,
       contents: {
         where: { status: ContentStatus.PUBLISHED },
         select: {
@@ -167,10 +167,10 @@ export async function getProfileByHandle(handle: string): Promise<AuraProfile | 
     }
   });
 
-  return user ? toAuraProfile(user) : null;
+  return user ? toIdentityProfile(user) : null;
 }
 
-function toAuraProfile(user: AuraProfilePayload): AuraProfile {
+function toIdentityProfile(user: IdentityProfilePayload): IdentityProfile {
   return {
     user: {
       id: user.id,
@@ -182,19 +182,19 @@ function toAuraProfile(user: AuraProfilePayload): AuraProfile {
       contentCount: user._count.contents,
       commentCount: user._count.comments
     },
-    identity: user.auraIdentity
+    identity: user.identityCard
       ? {
-          serial: user.auraIdentity.serial,
-          code: user.auraIdentity.code,
-          generationVersion: user.auraIdentity.generationVersion,
-          displayName: user.auraIdentity.displayName,
-          handle: user.auraIdentity.handle,
-          quote: user.auraIdentity.quote,
-          skills: parseSkills(user.auraIdentity.skills),
-          cardVariant: user.auraIdentity.cardVariant,
-          isFounder: user.auraIdentity.isFounder,
-          avatarUrl: user.auraIdentity.avatarUrl,
-          cardBackgroundUrl: user.auraIdentity.cardBackgroundUrl
+          serial: user.identityCard.serial,
+          code: user.identityCard.code,
+          generationVersion: user.identityCard.generationVersion,
+          displayName: user.identityCard.displayName,
+          handle: user.identityCard.handle,
+          quote: user.identityCard.quote,
+          skills: parseSkills(user.identityCard.skills),
+          cardVariant: user.identityCard.cardVariant,
+          isFounder: user.identityCard.isFounder,
+          avatarUrl: user.identityCard.avatarUrl,
+          cardBackgroundUrl: user.identityCard.cardBackgroundUrl
         }
       : null,
     contents: user.contents,

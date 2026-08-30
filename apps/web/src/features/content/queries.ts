@@ -278,7 +278,7 @@ export async function getSiteStats(): Promise<SiteStats> {
   const [contentCount, memberCount, founderCount] = await Promise.all([
     prisma.content.count({ where: { status: ContentStatus.PUBLISHED } }),
     prisma.user.count(),
-    prisma.auraIdentity.count({ where: { isFounder: true } })
+    prisma.identityCard.count({ where: { isFounder: true } })
   ]);
 
   return {

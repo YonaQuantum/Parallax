@@ -58,12 +58,12 @@ enum RelationType {
   SERIES_NEXT
 }
 
-enum AuraCardVariant {
+enum IdentityCardVariant {
   MOON
   WHITE
 }
 
-enum AuraIdentityStatus {
+enum IdentityCardStatus {
   RESERVED
   CLAIMED
   SUSPENDED
@@ -151,7 +151,7 @@ model User {
   notifications           Notification[]
   mediaFiles              MediaFile[]
   extensions              CommunityExtension[]
-  auraIdentity            AuraIdentity?
+  identityCard            IdentityCard?
   emailVerificationTokens EmailVerificationToken[]
   canvasSnapshots         CanvasSnapshot[]
   createdAgentTasks       AgentTask[]              @relation("AgentTaskCreator")
@@ -210,7 +210,7 @@ model EmailVerificationToken {
   @@index([userId, usedAt])
 }
 
-model AuraIdentity {
+model IdentityCard {
   id                String             @id @default(cuid())
   serial            String             @unique
   code              String             @unique
@@ -219,8 +219,8 @@ model AuraIdentity {
   handle            String             @unique
   quote             String?
   skills            Json
-  cardVariant       AuraCardVariant    @default(WHITE)
-  status            AuraIdentityStatus @default(RESERVED)
+  cardVariant       IdentityCardVariant    @default(WHITE)
+  status            IdentityCardStatus @default(RESERVED)
   isFounder         Boolean            @default(false)
   avatarUrl         String?
   cardBackgroundUrl String?
