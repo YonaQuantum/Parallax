@@ -22,6 +22,7 @@
 - Prisma schema、migration 和 seed 位于 `packages/db/prisma`。
 - 真实成员资料不进入仓库。成员应通过注册流程创建账号，seed 只初始化站点所有者和基础系统数据。
 - `.env`、`config/*.local.json`、上传文件、Radar 本地索引和模型文件不得提交。
+- `.env` 采用 dotenv 格式，不等同于 shell 脚本。带空格或中文的值应加引号；启动 Node 进程优先使用 `node --env-file=.env`、Next 自带环境加载或 Docker Compose，不要直接 `source .env`。
 
 ## 已知迁移项
 
@@ -141,6 +142,7 @@ docker build -f infra/docker/Dockerfile -t parallax-monorepo-check .
 Radar 变更：
 
 ```bash
+npm run radar:test
 npm run radar:dry-run
 ```
 

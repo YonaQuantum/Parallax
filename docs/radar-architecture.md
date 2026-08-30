@@ -82,7 +82,7 @@ type RadarItem = {
 ```ts
 type SignalCandidate = {
   itemId: string;
-  category: "code" | "ai" | "game" | "hardware" | "create" | "science";
+  primaryCategory: "code" | "ai" | "game" | "hardware" | "create" | "science";
   topics: string[];
   summary: string;
   whyItMatters: string;
@@ -91,12 +91,14 @@ type SignalCandidate = {
   confidence: number;
   language: string;
   evidence: string[];
-  duplicateOf?: string;
   flags: string[];
+  duplicateOf?: string;
 };
 ```
 
-只有通过 ranking 的候选才进入首页展示。
+`primaryCategory` 只决定一级入口；跨领域关系通过 `topics` 表达。为了兼容第一阶段主站 ingest 元数据，Radar 运行时也会保留同值的 `category` 字段，但新代码应优先读取 `primaryCategory`。
+
+只有通过去重、预过滤和 ranking 的候选才进入首页展示。
 
 ## 透明排序
 
@@ -145,7 +147,7 @@ RADAR_LLM_API_KEY=只放在运行环境
 RADAR_LLM_MODEL=deepseek-chat
 ```
 
-关闭 `RADAR_LLM_ENABLED` 时，Radar 必须继续可运行。
+关闭 `RADAR_LLM_ENABLED` 时，Radar 必须继续可运行：来源抓取、URL 归一、日期解析、精确去重、基础分类、摘要 fallback 和 Hybrid Ranking 都由程序完成。LLM 出错、超时或结构化输出校验失败时，只跳过当前语义增强，不停止整轮 pipeline。
 
 ## GitHub 个人页同步
 

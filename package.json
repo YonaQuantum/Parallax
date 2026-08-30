@@ -23,7 +23,8 @@
     "compose:down": "docker compose -f infra/docker/docker-compose.yml down",
     "radar:dry-run": "node --env-file=.env services/radar/runner.mjs --config services/radar/config.example.json --once --dry-run --include-disabled --limit 2",
     "radar:once": "node --env-file=.env services/radar/runner.mjs --config services/radar/config.local.json --once",
-    "radar:run": "node --env-file=.env services/radar/runner.mjs --config services/radar/config.local.json"
+    "radar:run": "node --env-file=.env services/radar/runner.mjs --config services/radar/config.local.json",
+    "radar:test": "node --test services/radar/tests/*.test.mjs"
   },
   "dependencies": {},
   "devDependencies": {

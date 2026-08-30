@@ -110,6 +110,7 @@ npm run db:deploy        # 生产迁移
 npm run db:seed          # 初始化站点所有者和基础领域时钟
 npm run radar:dry-run    # 抓取真实来源但不写库
 npm run radar:once       # 抓取并写入一次 Radar 数据
+npm run radar:test       # 离线测试 Radar 流水线，不访问网络或模型
 ```
 
 ## 协作约定
@@ -125,7 +126,7 @@ fix: 修复邮箱验证过期判断
 
 ## Radar 接入
 
-Radar 是独立信息系统，不是聊天助手。它只通过主站 HTTP API 写入数据，不直接连接主站数据库。
+Radar 是独立信息系统，不是聊天助手，也不会自动伪装成人类发帖。它把公开互联网来源经过收集、标准化、去重、正文清洗、可选 LLM 语义增强、聚类和排序后形成外部 Signal，再通过主站 HTTP API 写入数据；它不直接连接主站数据库。
 
 写入接口统一使用：
 
@@ -142,6 +143,8 @@ Authorization: Bearer $RADAR_SHARED_SECRET
 - `GET /api/observatory/stream`
 
 接口契约见 [docs/radar-api.md](docs/radar-api.md)，系统拆分见 [docs/radar-architecture.md](docs/radar-architecture.md)。
+
+LLM 只用于语义理解。关闭 `RADAR_LLM_ENABLED` 时，Radar 仍会继续执行抓取、标准化、精确去重、启发式摘要、分类和 Hybrid Ranking。
 
 ## Docker 部署
 

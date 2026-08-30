@@ -33,6 +33,14 @@
       "model": "bge-reranker-or-compatible"
     }
   },
+  "rankingWeights": {
+    "recency": 0.25,
+    "momentum": 0.2,
+    "sourceQuality": 0.15,
+    "novelty": 0.15,
+    "communityFit": 0.15,
+    "editorialInterest": 0.1
+  },
   "sources": [
     {
       "id": "github-hot-projects",

@@ -1,0 +1,130 @@
+[
+  {
+    "sourceId": "github-fixture",
+    "externalId": "github:parallax-labs/hardline",
+    "title": "parallax-labs/hardline",
+    "url": "https://github.com/parallax-labs/hardline?utm_source=newsletter",
+    "summary": "A terminal-first workflow tool for Linux development teams.",
+    "rawText": "parallax-labs/hardline\nA terminal-first workflow tool for Linux development teams.\nstars: 18000\nlanguage: Rust\ntopics: cli, linux, developer-tools",
+    "metadata": {
+      "stars": 18000,
+      "starsDelta24h": 950,
+      "published": "2026-08-31T01:00:00.000Z"
+    },
+    "tags": ["Rust", "CLI", "Linux"]
+  },
+  {
+    "sourceId": "github-fixture",
+    "externalId": "github:parallax-labs/hardline",
+    "title": "parallax-labs/hardline",
+    "url": "https://github.com/parallax-labs/hardline",
+    "summary": "A terminal-first workflow tool for Linux development teams.",
+    "rawText": "parallax-labs/hardline\nA terminal-first workflow tool for Linux development teams.\nstars: 18000",
+    "metadata": {
+      "stars": 18000,
+      "starsDelta24h": 930,
+      "published": "2026-08-31T01:30:00.000Z"
+    },
+    "tags": ["Rust", "CLI"]
+  },
+  {
+    "sourceId": "ai-fixture",
+    "externalId": "arxiv:https://arxiv.org/abs/2608.00123",
+    "title": "Small Multimodal Agents for Local Tool Use",
+    "url": "https://arxiv.org/abs/2608.00123",
+    "summary": "A paper studying multimodal agents that operate with local tools and limited context.",
+    "rawText": "Small Multimodal Agents for Local Tool Use\nThe work evaluates local tool-use agents under bounded compute and compares routing strategies.",
+    "metadata": {
+      "published": "2026-08-30T05:00:00.000Z"
+    },
+    "tags": ["arXiv", "Agent", "Multimodal"]
+  },
+  {
+    "sourceId": "ai-fixture",
+    "externalId": "rss:https://arxiv.org/abs/2608.00123",
+    "title": "Small Multimodal Agents for Local Tool Use",
+    "url": "https://arxiv.org/abs/2608.00123?ref=feed",
+    "summary": "A paper studying multimodal agents that operate with local tools and limited context.",
+    "rawText": "Small Multimodal Agents for Local Tool Use\nThe work evaluates local tool-use agents under bounded compute and compares routing strategies.",
+    "metadata": {
+      "published": "2026-08-30T05:00:00.000Z"
+    },
+    "tags": ["AI", "Agent"]
+  },
+  {
+    "sourceId": "game-fixture",
+    "externalId": "rss:godot-spectrum-tools",
+    "title": "Godot plugin experiments with spectrum-based lighting tools",
+    "url": "https://example.org/godot-spectrum-tools",
+    "summary": "A game tooling article describes spectrum-driven lighting controls for realtime prototypes.",
+    "rawText": "Godot plugin experiments with spectrum-based lighting tools\nThe prototype exposes spectral controls to artists building realtime scenes.",
+    "metadata": {
+      "published": "2026-08-31T03:00:00.000Z",
+      "comments": 48
+    },
+    "tags": ["Godot", "Shader", "光谱科学"]
+  },
+  {
+    "sourceId": "hardware-fixture",
+    "externalId": "rss:esp32-tinyml-audio",
+    "title": "ESP32 TinyML audio kit adds wake-word examples",
+    "url": "https://example.org/esp32-tinyml-audio",
+    "summary": "An embedded project adds audio classification examples for small microcontrollers.",
+    "rawText": "ESP32 TinyML audio kit adds wake-word examples\nThe project publishes examples for audio classification on microcontrollers.",
+    "metadata": {
+      "published": "2026-08-29T08:00:00.000Z",
+      "score": 0.72
+    },
+    "tags": ["ESP32", "TinyML", "Audio"]
+  },
+  {
+    "sourceId": "creative-fixture",
+    "externalId": "rss:blender-node-sound",
+    "title": "Blender node workflow links procedural animation and sound",
+    "url": "https://example.org/blender-node-sound",
+    "summary": "A creative tooling post connects procedural animation controls with sound design data.",
+    "rawText": "Blender node workflow links procedural animation and sound\nThe workflow maps sound data into procedural animation parameters.",
+    "metadata": {
+      "published": "2026-08-28T10:00:00.000Z"
+    },
+    "tags": ["Blender", "Sound", "Animation"]
+  },
+  {
+    "sourceId": "science-fixture",
+    "externalId": "rss:exo-life-atmospheres",
+    "title": "New telescope observations refine exoplanet atmosphere models",
+    "url": "https://example.org/exoplanet-atmospheres",
+    "summary": "A science report describes improved exoplanet atmosphere constraints and biosignature limits.",
+    "rawText": "New telescope observations refine exoplanet atmosphere models\nThe report discusses constraints on atmosphere composition and limits for biosignature interpretation.",
+    "metadata": {
+      "published": "2026-08-31T02:00:00.000Z"
+    },
+    "tags": ["Exoplanet", "Astronomy", "宇宙生命"]
+  },
+  {
+    "sourceId": "github-fixture",
+    "externalId": "github:open-runtime/edge-db",
+    "title": "open-runtime/edge-db",
+    "url": "https://github.com/open-runtime/edge-db",
+    "summary": "A local-first database runtime for offline web applications.",
+    "rawText": "open-runtime/edge-db\nA local-first database runtime for offline web applications.\nstars: 6200\nlanguage: TypeScript",
+    "metadata": {
+      "stars": 6200,
+      "starsDelta24h": 220,
+      "published": "2026-08-30T13:00:00.000Z"
+    },
+    "tags": ["TypeScript", "Database", "Local-first"]
+  },
+  {
+    "sourceId": "science-fixture",
+    "externalId": "rss:philosophy-cosmos",
+    "title": "What counts as intelligence in a sparse universe?",
+    "url": "https://example.org/sparse-universe-intelligence",
+    "summary": "An essay asks how philosophy of mind changes under uncertain cosmic life evidence.",
+    "rawText": "What counts as intelligence in a sparse universe?\nThe essay discusses philosophy of mind, astrobiology and the absence of strong evidence.",
+    "metadata": {
+      "published": "2026-08-27T12:00:00.000Z"
+    },
+    "tags": ["Philosophy", "Astrobiology"]
+  }
+]

@@ -53,15 +53,41 @@ Linux 主机
 
 1. 稳定抓取。
 2. 可靠去重。
-3. 程序完成标准化、精确去重、预过滤和透明排序。
-4. LLM 只负责语义理解：分类、主题、摘要、关注理由、新颖度和编辑兴趣。
+3. 程序完成标准化、精确去重、预过滤、正文获取和透明排序。
+4. LLM 只负责语义理解：分类、主题、摘要、关注理由、新颖度、编辑兴趣，以及少量模糊同事件判断。
 5. 能给首页和观测台输出真实 World Signals。
 
 训练和微调放到后面，等真实数据积累起来再决定是否必要。
 
-## 最小可运行 Radar
+## 流水线
 
-`runner.mjs` 是当前阶段的最小采集进程。它不依赖 Next.js 代码，不直接连接数据库，只通过主站 HTTP API 写入真实资料：
+当前实现采用普通函数和 source adapter，不引入大型 Agent 框架：
+
+```txt
+collect
+  -> normalize RadarItem
+  -> exact dedupe
+  -> pre-filter
+  -> fetch content
+  -> optional LLM enrich
+  -> semantic cluster
+  -> hybrid rank
+  -> persist/publish
+```
+
+`runner.mjs` 只负责配置、调度一轮采集和调用主站 API。具体能力分布在：
+
+- `sources/`：RSS / Atom、GitHub Search、arXiv、普通 Web 的 adapter 边界。
+- `normalize/`：URL canonicalization、日期解析、metrics 标准化、fingerprint。
+- `dedupe/`：source GUID、canonical URL、content fingerprint 精确去重，以及 bounded 同事件 fallback。
+- `fetch/`：网页正文获取与 clean text 抽取，不把原始 HTML 交给 LLM。
+- `llm/`：OpenAI-compatible provider、版本化 prompt、结构化输出校验。
+- `rank/`：可配置 Hybrid Ranking。
+- `pipeline/`：把各阶段串成可测试流程。
+
+## 运行
+
+`runner.mjs` 不依赖 Next.js 代码，不直接连接数据库，只通过主站 HTTP API 写入真实资料：
 
 ```txt
 services/radar/runner.mjs -> /api/radar/heartbeat
@@ -113,6 +139,12 @@ npm run radar:once
 npm run radar:run
 ```
 
+离线测试：
+
+```bash
+npm run radar:test
+```
+
 之后迁到具备 GPU 的 Linux 工作站时，只需要复制 `services/radar/` 目录、安装 Node 22+、配置同样的 `RADAR_SHARED_SECRET` 和公网/内网可访问的 `PARALLAX_BASE_URL`。
 
 ## 目录
@@ -123,11 +155,18 @@ services/radar/
   config.example.json
   config.local.example.json
   runner.mjs
-  fetch/
-  llm/
-  pipeline/
-  schemas/
-  storage/
+  sources/             source adapter
+  collector/           抓取调度边界预留
+  normalize/           RadarItem 标准化
+  dedupe/              精确去重和同事件判断边界
+  fetch/               网页正文获取与清洗
+  llm/                 可关闭的语义理解层
+    prompts/           enrich-v1 / event-relation-v1
+  rank/                Hybrid Ranking
+  pipeline/            可测试流水线
+  schemas/             runtime validation
+  storage/             本地缓存、游标、索引预留
+  tests/               离线 fixture 与单元测试
   docs/
     architecture.md
     deployment-workstation.md

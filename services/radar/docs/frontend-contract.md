@@ -17,7 +17,7 @@
   - 科学与宇宙领域的 NASA、ESA、JWST、系外行星、宇宙生命和科学哲学资料
 - 每条 Signal 的阶段：`NEW`、`RISING`、`ACTIVE`、`COOLING`。
 - 每条 Signal 的原始来源。
-- 每条 Signal 的简短解释：为什么值得看。
+- 每条 Signal 的简短解释：为什么值得看。Radar metadata 使用 `whyItMatters`，并在第一阶段兼容写入 `whyInteresting`。
 
 已有接口：
 
