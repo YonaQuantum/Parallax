@@ -9,6 +9,7 @@ export function validateSignalCandidate(input) {
   const primaryCategory = input.primaryCategory ?? input.category;
   const candidate = {
     primaryCategory: categories.has(primaryCategory) ? primaryCategory : undefined,
+    displayTitle: normalizeText(input.displayTitle ?? input.display_title, 36),
     topics: normalizeStringArray(input.topics, 6),
     summary: normalizeText(input.summary, 140),
     whyItMatters: normalizeText(input.whyItMatters ?? input.why_it_matters, 120),

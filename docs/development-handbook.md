@@ -23,6 +23,7 @@
 - 真实成员资料不进入仓库。成员应通过注册流程创建账号，seed 只初始化站点所有者和基础系统数据。
 - `.env`、`config/*.local.json`、上传文件、Radar 本地索引和模型文件不得提交。
 - `.env` 采用 dotenv 格式，不等同于 shell 脚本。带空格或中文的值应加引号；启动 Node 进程优先使用 `node --env-file=.env`、Next 自带环境加载或 Docker Compose，不要直接 `source .env`。
+- Radar 外部摄入物和社区文章分属不同数据模型。清理旧资讯时只归档 `IngestedArtifact.deepArchivedAt`，不要删除或归档社区成员发布的 `Content`。前端展示短标题优先使用 `metadata.displayTitle`，原始来源标题保留在 `metadata.rawTitle`。
 
 ## 已知迁移项
 

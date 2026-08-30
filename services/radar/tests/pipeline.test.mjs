@@ -158,6 +158,7 @@ describe("Radar pipeline primitives", () => {
   it("validates LLM structured output", () => {
     const valid = validateSignalCandidate({
       primaryCategory: "ai",
+      displayTitle: "本地 RAG 工具更新",
       topics: ["Agent", "RAG"],
       summary: "一项模型工具更新发布，聚焦本地检索增强流程。",
       whyItMatters: "它可能影响社区的本地知识流建设。",
@@ -179,6 +180,7 @@ describe("Radar pipeline primitives", () => {
 
     assert.equal(valid.ok, true);
     assert.equal(valid.value.primaryCategory, "ai");
+    assert.equal(valid.value.displayTitle, "本地 RAG 工具更新");
     assert.equal(invalid.ok, false);
   });
 
@@ -241,6 +243,7 @@ describe("Radar pipeline primitives", () => {
     const payload = toIngestPayload("offline-radar", source, item, candidate);
 
     assert.equal(payload.metadata.signalCandidate.primaryCategory, "science");
+    assert.equal(payload.metadata.rawTitle, "Exoplanet signal");
     assert.equal(payload.metadata.whyInteresting, payload.metadata.whyItMatters);
     assert.equal(payload.metadata.canonicalUrl, "https://example.org/exoplanet");
     assert.equal(payload.metadata.thumbnailUrl, "https://images.example.org/exoplanet.jpg");

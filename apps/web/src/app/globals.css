@@ -272,18 +272,18 @@ textarea {
 }
 
 .ap-signal-card-with-media {
-  padding-right: clamp(1.25rem, 28vw, 17rem);
+  padding-right: clamp(1.25rem, 36vw, 22rem);
 }
 
 .ap-signal-thumb {
   position: absolute;
   inset: 0 0 0 auto;
-  width: min(48%, 26rem);
-  opacity: 0.68;
+  width: min(68%, 42rem);
+  opacity: 0.78;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
-  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.2) 28%, rgba(0, 0, 0, 0.78) 68%, #000 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.2) 28%, rgba(0, 0, 0, 0.78) 68%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.08) 14%, rgba(0, 0, 0, 0.28) 32%, rgba(0, 0, 0, 0.68) 54%, #000 72%, #000 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.08) 14%, rgba(0, 0, 0, 0.28) 32%, rgba(0, 0, 0, 0.68) 54%, #000 72%, #000 100%);
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
@@ -292,27 +292,27 @@ textarea {
   inset: 0;
   content: "";
   background:
-    linear-gradient(90deg, rgba(7, 8, 13, 0), rgba(7, 8, 13, 0.28)),
-    radial-gradient(circle at 80% 50%, rgba(242, 245, 255, 0.16), transparent 58%);
+    linear-gradient(90deg, rgba(7, 8, 13, 0), rgba(7, 8, 13, 0.08) 58%, rgba(7, 8, 13, 0.18)),
+    radial-gradient(circle at 84% 50%, rgba(242, 245, 255, 0.13), transparent 56%);
 }
 
 .ap-signal-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.78) contrast(1.08) brightness(0.72);
+  filter: saturate(0.82) contrast(1.08) brightness(0.78);
   transform: scale(1.02);
   transition: filter 180ms ease, transform 180ms ease;
 }
 
 .ap-signal-card:hover .ap-signal-thumb,
 .ap-observatory-row:hover .ap-signal-thumb {
-  opacity: 0.82;
+  opacity: 0.9;
 }
 
 .ap-signal-card:hover .ap-signal-thumb img,
 .ap-observatory-row:hover .ap-signal-thumb img {
-  filter: saturate(0.92) contrast(1.12) brightness(0.8);
+  filter: saturate(0.95) contrast(1.12) brightness(0.86);
   transform: scale(1.06);
 }
 
@@ -328,11 +328,11 @@ textarea {
 }
 
 .ap-observatory-row-with-media {
-  padding-right: clamp(1.25rem, 32vw, 22rem);
+  padding-right: clamp(1.25rem, 38vw, 28rem);
 }
 
 .ap-signal-thumb-row {
-  width: min(42%, 30rem);
+  width: min(62%, 42rem);
 }
 
 .ap-liquid-glass {
@@ -455,43 +455,105 @@ textarea {
   transform: translate3d(0, calc(var(--hero-progress) * -124px), 0);
 }
 
-.ap-depth-section {
+.ap-domain-index {
   margin-top: 3.5rem;
   border-top: 1px solid rgba(242, 245, 255, 0.06);
   padding-block: 3rem 4rem;
 }
 
-.ap-depth-deck {
-  position: relative;
-  min-height: 34rem;
-  overflow: hidden;
-  perspective: 1400px;
-  perspective-origin: 35% 40%;
+.ap-domain-index-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 28rem);
+  gap: clamp(1rem, 4vw, 5rem);
+  align-items: end;
 }
 
-.ap-depth-card {
-  position: absolute;
-  left: 0;
-  top: 8.5rem;
-  width: min(100% - 1rem, 52rem);
-  min-height: 21rem;
-  border: 1px solid rgba(242, 245, 255, calc(0.16 - var(--deck-progress) * 0.08));
-  background:
-    linear-gradient(135deg, rgba(242, 245, 255, calc(0.088 - var(--deck-progress) * 0.04)), rgba(242, 245, 255, 0.018) 44%, rgba(7, 8, 13, 0.38)),
-    rgba(14, 17, 25, calc(0.56 - var(--deck-progress) * 0.18));
-  backdrop-filter: blur(calc(10px + var(--deck-progress) * 22px)) saturate(135%);
-  -webkit-backdrop-filter: blur(calc(10px + var(--deck-progress) * 22px)) saturate(135%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 28px 100px rgba(0, 0, 0, calc(0.26 - var(--deck-progress) * 0.08));
-  clip-path: polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 32px 100%, 0 calc(100% - 32px));
-  padding: clamp(1.35rem, 3vw, 2.5rem);
-  transform-origin: left center;
-  will-change: transform, opacity, filter;
+.ap-domain-index-head h2 {
+  font-size: clamp(2.4rem, 6vw, 5.8rem);
+  font-weight: 600;
+  line-height: 0.95;
+  color: rgba(242, 245, 255, 0.94);
 }
 
-.ap-depth-card[aria-current="true"] {
-  border-color: rgba(242, 245, 255, 0.22);
+.ap-domain-index-head p {
+  max-width: 28rem;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(242, 245, 255, 0.42);
+}
+
+.ap-domain-list {
+  margin-top: 2.5rem;
+  border-top: 1px solid rgba(242, 245, 255, 0.08);
+}
+
+.ap-domain-row {
+  display: grid;
+  grid-template-columns: 3.5rem 6.5rem minmax(0, 1fr) minmax(12rem, 20rem) 1.75rem;
+  gap: clamp(1rem, 2vw, 2.5rem);
+  align-items: center;
+  min-height: 7.4rem;
+  border-bottom: 1px solid rgba(242, 245, 255, 0.07);
+  color: rgba(242, 245, 255, 0.64);
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.ap-domain-row:hover {
+  border-color: rgba(242, 245, 255, 0.16);
+  background: linear-gradient(90deg, rgba(242, 245, 255, 0.055), transparent 76%);
+  color: rgba(242, 245, 255, 0.92);
+}
+
+.ap-domain-no,
+.ap-domain-code {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: rgba(242, 245, 255, 0.34);
+}
+
+.ap-domain-main {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.ap-domain-title {
+  font-size: clamp(1.55rem, 2.4vw, 2.5rem);
+  font-weight: 520;
+  line-height: 1;
+  color: rgba(242, 245, 255, 0.92);
+}
+
+.ap-domain-description {
+  max-width: 45rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(242, 245, 255, 0.46);
+}
+
+.ap-domain-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: rgba(242, 245, 255, 0.42);
+}
+
+.ap-domain-tags span + span::before {
+  margin-right: 0.75rem;
+  color: rgba(242, 245, 255, 0.18);
+  content: "/";
+}
+
+.ap-domain-arrow {
+  color: rgba(242, 245, 255, 0.34);
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.ap-domain-row:hover .ap-domain-arrow {
+  color: var(--yellow);
+  transform: translateX(4px);
 }
 
 @media (max-width: 720px) {
@@ -514,13 +576,27 @@ textarea {
     transform: translate3d(0, calc(var(--hero-progress) * -70px), 0);
   }
 
-  .ap-depth-deck {
-    min-height: 33rem;
+  .ap-domain-index-head,
+  .ap-domain-row {
+    grid-template-columns: 1fr;
   }
 
-  .ap-depth-card {
-    top: 7.5rem;
-    min-height: 24rem;
+  .ap-domain-row {
+    gap: 0.75rem;
+    min-height: auto;
+    padding-block: 1.25rem;
+  }
+
+  .ap-domain-code {
+    display: none;
+  }
+
+  .ap-domain-tags {
+    justify-content: flex-start;
+  }
+
+  .ap-domain-arrow {
+    display: none;
   }
 
   .ap-signal-card-with-media {

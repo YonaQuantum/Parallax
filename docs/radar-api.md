@@ -271,3 +271,7 @@ take=10
 ## 外部内容边界
 
 Radar 只保存标题、来源链接、短摘要、标签、热度、去重 ID、外部缩略图 URL 和必要元数据。不要镜像新闻、博客、论文或视频全文；不要下载并重新分发受版权保护的媒体。外部内容在社区内应作为索引、线索和讨论入口，完整阅读回到原站。
+
+## 外部信号回收
+
+Radar 摄入物是外部信息流，不等同于社区文章。主站在 Radar 写入时会对 `IngestedArtifact` 做软回收：超过 `RADAR_ARTIFACT_RETENTION_DAYS` 的条目、超过 `RADAR_ARTIFACT_MAX_VISIBLE` 可见上限的旧条目，或超过 `RADAR_INCOMPLETE_ARTIFACT_GRACE_HOURS` 后仍无缩略图且缺少中文编辑信息的条目，会写入 `deepArchivedAt`，默认前端不再展示。社区成员发布的 `Content` 不参与该回收。

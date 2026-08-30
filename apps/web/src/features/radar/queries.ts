@@ -103,7 +103,7 @@ export async function getWorldSignals({
     const metadata = asRecord(artifact.metadata);
     return {
       id: `artifact-${artifact.id}`,
-      title: artifact.title,
+      title: readString(metadata, "displayTitle") ?? artifact.title,
       summary: readSignalSummary(metadata, artifact.domain),
       href: artifact.url,
       thumbnailUrl: readUrl(metadata, "thumbnailUrl"),
