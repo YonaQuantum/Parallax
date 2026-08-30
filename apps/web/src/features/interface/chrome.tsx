@@ -17,32 +17,19 @@ import {
 } from "lucide-react";
 import { site, type SiteDomainCode } from "@/config/site";
 
-export const domains = [
-  {
-    code: "CODE",
-    href: "/explore"
-  },
-  {
-    code: "AI_MODELS",
-    href: "/explore"
-  },
-  {
-    code: "GAME_INTERACTION",
-    href: "/explore"
-  },
-  {
-    code: "HARDWARE_EMBEDDED",
-    href: "/explore"
-  },
-  {
-    code: "CREATIVE_MEDIA",
-    href: "/explore"
-  },
-  {
-    code: "SCIENCE_COSMOS",
-    href: "/explore"
-  }
-] satisfies Array<{ code: SiteDomainCode; href: string }>;
+const domainCodes: SiteDomainCode[] = [
+  "CODE",
+  "AI_MODELS",
+  "GAME_INTERACTION",
+  "HARDWARE_EMBEDDED",
+  "CREATIVE_MEDIA",
+  "SCIENCE_COSMOS"
+];
+
+export const domains: Array<{ code: SiteDomainCode; href: string }> = domainCodes.map((code) => ({
+  code,
+  href: `/map?domain=${code}`
+}));
 
 const nav = [
   { href: "/explore", label: site.copy.nav.explore },
