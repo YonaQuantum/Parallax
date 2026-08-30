@@ -1,0 +1,136 @@
+{
+  "parallax": {
+    "baseUrl": "https://your-parallax-domain.example",
+    "sharedSecretEnv": "RADAR_SHARED_SECRET"
+  },
+  "runtime": {
+    "slug": "local-researcher",
+    "heartbeatSeconds": 30,
+    "concurrency": 2,
+    "resourcePolicy": {
+      "pauseDeepAnalysisAboveLoad": 0.82,
+      "throttleAboveLoad": 0.62
+    }
+  },
+  "models": {
+    "chat": {
+      "provider": "openai-compatible",
+      "baseUrlEnv": "LOCAL_LLM_BASE_URL",
+      "apiKeyEnv": "LOCAL_LLM_API_KEY",
+      "model": "qwen-or-llama-local"
+    },
+    "embedding": {
+      "provider": "openai-compatible",
+      "baseUrlEnv": "LOCAL_EMBEDDING_BASE_URL",
+      "apiKeyEnv": "LOCAL_EMBEDDING_API_KEY",
+      "model": "bge-or-jina-local"
+    },
+    "rerank": {
+      "provider": "local",
+      "model": "bge-reranker-or-compatible"
+    }
+  },
+  "sources": [
+    {
+      "id": "github-hot-projects",
+      "title": "GitHub",
+      "type": "github-search",
+      "domain": "CODE",
+      "tags": ["GitHub", "开源项目"],
+      "enabled": false,
+      "heartbeatSeconds": 21600,
+      "queries": [
+        "stars:>5000 pushed:>=YYYY-MM-DD cli developer tools",
+        "stars:>3000 pushed:>=YYYY-MM-DD database",
+        "stars:>3000 pushed:>=YYYY-MM-DD linux",
+        "stars:>2000 pushed:>=YYYY-MM-DD web framework"
+      ]
+    },
+    {
+      "id": "ai-research",
+      "title": "arXiv",
+      "type": "arxiv",
+      "domain": "AI_MODELS",
+      "tags": ["arXiv", "论文", "智能体"],
+      "enabled": false,
+      "heartbeatSeconds": 43200,
+      "queries": [
+        "artificial intelligence agents",
+        "multimodal large language models",
+        "open source model inference"
+      ]
+    },
+    {
+      "id": "model-releases",
+      "title": "Hugging Face",
+      "type": "rss",
+      "domain": "AI_MODELS",
+      "tags": ["模型发布", "Hugging Face"],
+      "enabled": false,
+      "heartbeatSeconds": 21600,
+      "feeds": [
+        "https://huggingface.co/blog/feed.xml"
+      ]
+    },
+    {
+      "id": "game-culture",
+      "title": "Godot",
+      "type": "rss",
+      "domain": "GAME_INTERACTION",
+      "tags": ["游戏引擎", "Godot", "交互"],
+      "enabled": false,
+      "heartbeatSeconds": 21600,
+      "feeds": [
+        "https://godotengine.org/rss.xml"
+      ]
+    },
+    {
+      "id": "hardware-embedded",
+      "title": "Hackaday",
+      "type": "rss",
+      "domain": "HARDWARE_EMBEDDED",
+      "tags": ["硬件", "嵌入式", "DIY"],
+      "enabled": false,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://hackaday.com/blog/feed/"
+      ]
+    },
+    {
+      "id": "creative-media",
+      "title": "Blender",
+      "type": "rss",
+      "domain": "CREATIVE_MEDIA",
+      "tags": ["Blender", "3D", "创作工具"],
+      "enabled": false,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://code.blender.org/feed/"
+      ]
+    },
+    {
+      "id": "cosmic-life",
+      "title": "NASA",
+      "type": "rss",
+      "domain": "SCIENCE_COSMOS",
+      "tags": ["NASA", "航天", "科学"],
+      "enabled": false,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://www.nasa.gov/feed/"
+      ]
+    },
+    {
+      "id": "thought-and-cosmos",
+      "title": "Aeon",
+      "type": "rss",
+      "domain": "SCIENCE_COSMOS",
+      "tags": ["哲学", "宇宙生命", "思想"],
+      "enabled": false,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://aeon.co/feed.rss"
+      ]
+    }
+  ]
+}

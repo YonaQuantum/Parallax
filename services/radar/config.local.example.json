@@ -1,0 +1,120 @@
+{
+  "parallax": {
+    "baseUrl": "http://127.0.0.1:3000",
+    "sharedSecretEnv": "RADAR_SHARED_SECRET"
+  },
+  "runtime": {
+    "slug": "local-researcher",
+    "name": "PARALLAX Radar",
+    "heartbeatSeconds": 60,
+    "concurrency": 2
+  },
+  "providers": {
+    "github": {
+      "tokenEnv": "GITHUB_TOKEN"
+    }
+  },
+  "sources": [
+    {
+      "id": "github-hot-projects",
+      "title": "GitHub",
+      "type": "github-search",
+      "domain": "CODE",
+      "tags": ["GitHub", "开源项目"],
+      "enabled": true,
+      "heartbeatSeconds": 21600,
+      "queries": [
+        "stars:>5000 pushed:>=YYYY-MM-DD cli developer tools",
+        "stars:>3000 pushed:>=YYYY-MM-DD database",
+        "stars:>3000 pushed:>=YYYY-MM-DD linux",
+        "stars:>2000 pushed:>=YYYY-MM-DD web framework"
+      ]
+    },
+    {
+      "id": "ai-research",
+      "title": "arXiv",
+      "type": "arxiv",
+      "domain": "AI_MODELS",
+      "tags": ["arXiv", "论文", "智能体"],
+      "enabled": true,
+      "heartbeatSeconds": 43200,
+      "queries": [
+        "artificial intelligence agents",
+        "multimodal large language models",
+        "open source model inference"
+      ]
+    },
+    {
+      "id": "model-releases",
+      "title": "Hugging Face",
+      "type": "rss",
+      "domain": "AI_MODELS",
+      "tags": ["模型发布", "Hugging Face"],
+      "enabled": true,
+      "heartbeatSeconds": 21600,
+      "feeds": [
+        "https://huggingface.co/blog/feed.xml"
+      ]
+    },
+    {
+      "id": "game-culture",
+      "title": "Godot",
+      "type": "rss",
+      "domain": "GAME_INTERACTION",
+      "tags": ["游戏引擎", "Godot", "交互"],
+      "enabled": true,
+      "heartbeatSeconds": 21600,
+      "feeds": [
+        "https://godotengine.org/rss.xml"
+      ]
+    },
+    {
+      "id": "hardware-embedded",
+      "title": "Hackaday",
+      "type": "rss",
+      "domain": "HARDWARE_EMBEDDED",
+      "tags": ["硬件", "嵌入式", "DIY"],
+      "enabled": false,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://hackaday.com/blog/feed/"
+      ]
+    },
+    {
+      "id": "creative-media",
+      "title": "Blender",
+      "type": "rss",
+      "domain": "CREATIVE_MEDIA",
+      "tags": ["Blender", "3D", "创作工具"],
+      "enabled": false,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://code.blender.org/feed/"
+      ]
+    },
+    {
+      "id": "cosmic-life",
+      "title": "NASA",
+      "type": "rss",
+      "domain": "SCIENCE_COSMOS",
+      "tags": ["NASA", "航天", "科学"],
+      "enabled": true,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://www.nasa.gov/feed/"
+      ]
+    },
+    {
+      "id": "thought-and-cosmos",
+      "title": "Aeon",
+      "type": "rss",
+      "domain": "SCIENCE_COSMOS",
+      "tags": ["哲学", "宇宙生命", "思想"],
+      "enabled": true,
+      "heartbeatSeconds": 43200,
+      "feeds": [
+        "https://aeon.co/feed.rss"
+      ]
+    }
+  ]
+}
