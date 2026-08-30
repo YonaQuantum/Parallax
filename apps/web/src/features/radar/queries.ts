@@ -51,10 +51,12 @@ const timeFormatter = new Intl.DateTimeFormat("zh-CN", {
 export async function getWorldSignals({
   balanced = false,
   query,
+  domain,
   take = 8
 }: {
   balanced?: boolean;
   query?: string;
+  domain?: KnowledgeDomain;
   take?: number;
 } = {}) {
   const keyword = query?.trim();
@@ -63,6 +65,7 @@ export async function getWorldSignals({
       interference: {
         not: KnowledgeInterference.BLOCKED
       },
+      ...(domain ? { domain } : {}),
       ...(keyword
         ? {
             OR: [

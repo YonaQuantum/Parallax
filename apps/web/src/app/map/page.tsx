@@ -1,14 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, Search } from "lucide-react";
-import { site } from "@/config/site";
+import { site, type SiteDomainCode } from "@/config/site";
 import { getWorldSignals, type WorldSignal } from "@/features/radar/queries";
 import { SpaceBackdrop, SubHeader } from "@/features/interface/chrome";
 
 export const dynamic = "force-dynamic";
 
-export default async function ObservatoryPage() {
-  const signals = await getWorldSignals({ take: 24 });
+export default async function ObservatoryPage({
+  searchParams
+}: {
+  searchParams: Promise<{ domain?: string }>;
+}) {
+  const rawDomain = (await searchParams).domain;
+  const domain = isSiteDomainCode(rawDomain) ? rawDomain : undefined;
+  const signals = await getWorldSignals({ domain, take: 48 });
+  const groups = groupSignalsByTimeline(signals);
+  const domainLabel = domain ? site.copy.domains[domain].label : null;
 
   return (
     <main className="ap-shell">
@@ -18,9 +26,13 @@ export default async function ObservatoryPage() {
       <div className="ap-container py-14 sm:py-20">
         <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
           <div>
-            <h1 className="text-5xl font-semibold leading-none sm:text-7xl">{site.copy.sections.observatory}</h1>
+            <h1 className="text-5xl font-semibold leading-none sm:text-7xl">
+              {domainLabel ?? site.copy.sections.observatory}
+            </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/60">
-              展示 Radar 摄入、筛选并公开的外部信号，以及社区内部正在发生的新发布。
+              {domainLabel
+                ? `${domainLabel}领域的外部信号时间线，来自 Radar 摄入、筛选并公开。`
+                : "展示 Radar 摄入、筛选并公开的外部信号，以及社区内部正在发生的新发布。"}
             </p>
           </div>
           <label className="flex h-11 items-center gap-3 border-b border-white/[0.12] text-sm text-white/42">
@@ -33,58 +45,22 @@ export default async function ObservatoryPage() {
         </section>
 
         <section className="mt-16">
-          <SectionHead title={site.copy.sections.signals} />
-          {signals.length > 0 ? (
-            <div className="mt-5 divide-y divide-white/[0.06]">
-              {signals.map((signal) => {
-                const content = (
-                  <>
-                    <span>
-                      <span className="font-mono text-xs text-white/34">
-                        {signal.time} / {signal.phase} / {signal.domain}
-                      </span>
-                      <span className="mt-2 block text-2xl font-medium leading-8 group-hover:text-[var(--yellow)]">
-                        {signal.title}
-                      </span>
-                      {signal.summary ? (
-                        <span className="mt-2 block max-w-3xl text-sm leading-6 text-white/52">
-                          {signal.summary}
-                        </span>
-                      ) : null}
-                    </span>
-                    <span className="flex items-center gap-2 self-end text-sm text-white/36 group-hover:text-white/60">
-                      {signal.source}
-                      <ArrowUpRight size={15} />
-                    </span>
-                  </>
-                );
-
-                return signal.href ? (
-                  <a
-                    className={`ap-observatory-row group grid gap-3 py-6 sm:grid-cols-[1fr_auto] ${signal.thumbnailUrl ? "ap-observatory-row-with-media" : ""}`}
-                    href={signal.href}
-                    key={signal.id}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {signal.thumbnailUrl ? <SignalBackdropImage signal={signal} /> : null}
-                    {content}
-                  </a>
-                ) : (
-                  <article
-                    className={`ap-observatory-row group grid gap-3 py-6 sm:grid-cols-[1fr_auto] ${signal.thumbnailUrl ? "ap-observatory-row-with-media" : ""}`}
-                    key={signal.id}
-                  >
-                    {signal.thumbnailUrl ? <SignalBackdropImage signal={signal} /> : null}
-                    {content}
-                  </article>
-                );
-              })}
-            </div>
+          <SectionHead
+            title={domainLabel ? `${domainLabel} · 信号` : site.copy.sections.signals}
+          />
+          {groups.length > 0 ? (
+            groups.map((group) => (
+              <div className="mt-10" key={group.label}>
+                <h2 className="text-xs font-medium tracking-[0.2em] text-white/34">{group.label}</h2>
+                <div className="mt-4 divide-y divide-white/[0.06]">
+                  {group.signals.map((signal) => (
+                    <SignalRow key={signal.id} signal={signal} />
+                  ))}
+                </div>
+              </div>
+            ))
           ) : (
-            <p className="mt-6 max-w-xl text-sm leading-6 text-white/48">
-              暂无公开观测信号。
-            </p>
+            <p className="mt-6 max-w-xl text-sm leading-6 text-white/48">暂无公开观测信号。</p>
           )}
         </section>
 
@@ -96,6 +72,47 @@ export default async function ObservatoryPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+function SignalRow({ signal }: { signal: WorldSignal }) {
+  const content = (
+    <>
+      <span>
+        <span className="font-mono text-xs text-white/34">
+          {signal.time} / {signal.phase} / {signal.domain}
+        </span>
+        <span className="mt-2 block text-2xl font-medium leading-8 group-hover:text-[var(--yellow)]">
+          {signal.title}
+        </span>
+        {signal.summary ? (
+          <span className="mt-2 block max-w-3xl text-sm leading-6 text-white/52">{signal.summary}</span>
+        ) : null}
+      </span>
+      <span className="flex items-center gap-2 self-end text-sm text-white/36 group-hover:text-white/60">
+        {signal.source}
+        <ArrowUpRight size={15} />
+      </span>
+    </>
+  );
+
+  return signal.href ? (
+    <a
+      className={`ap-observatory-row group grid gap-3 py-6 sm:grid-cols-[1fr_auto] ${signal.thumbnailUrl ? "ap-observatory-row-with-media" : ""}`}
+      href={signal.href}
+      rel="noreferrer"
+      target="_blank"
+    >
+      {signal.thumbnailUrl ? <SignalBackdropImage signal={signal} /> : null}
+      {content}
+    </a>
+  ) : (
+    <article
+      className={`ap-observatory-row group grid gap-3 py-6 sm:grid-cols-[1fr_auto] ${signal.thumbnailUrl ? "ap-observatory-row-with-media" : ""}`}
+    >
+      {signal.thumbnailUrl ? <SignalBackdropImage signal={signal} /> : null}
+      {content}
+    </article>
   );
 }
 
@@ -111,6 +128,48 @@ function SignalBackdropImage({ signal }: { signal: WorldSignal }) {
         unoptimized
       />
     </span>
+  );
+}
+
+const DAY_MS = 86_400_000;
+
+function groupSignalsByTimeline(signals: WorldSignal[]) {
+  const groups: Array<{ label: string; signals: WorldSignal[] }> = [];
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const startOfYesterday = startOfToday - DAY_MS;
+  const startOfWeek = startOfToday - 6 * DAY_MS;
+
+  for (const signal of signals) {
+    const time = signal.createdAt.getTime();
+    const label =
+      time >= startOfToday
+        ? "今天"
+        : time >= startOfYesterday
+          ? "昨天"
+          : time >= startOfWeek
+            ? "本周"
+            : "更早";
+
+    let group = groups.find((item) => item.label === label);
+    if (!group) {
+      group = { label, signals: [] };
+      groups.push(group);
+    }
+    group.signals.push(signal);
+  }
+
+  return groups;
+}
+
+function isSiteDomainCode(value: string | undefined): value is SiteDomainCode {
+  return (
+    value === "CODE" ||
+    value === "AI_MODELS" ||
+    value === "GAME_INTERACTION" ||
+    value === "HARDWARE_EMBEDDED" ||
+    value === "CREATIVE_MEDIA" ||
+    value === "SCIENCE_COSMOS"
   );
 }
 
