@@ -19,6 +19,7 @@ export async function collectGitHub(source, limit, context) {
         externalId: `github:${repo.full_name}`,
         title: repo.full_name,
         url: repo.html_url,
+        thumbnailUrl: repo.owner?.avatar_url,
         summary: repo.description ?? "",
         rawText: [
           repo.full_name,
@@ -34,7 +35,8 @@ export async function collectGitHub(source, limit, context) {
           stars: repo.stargazers_count,
           language: repo.language,
           topics: repo.topics ?? [],
-          updated: repo.updated_at
+          updated: repo.updated_at,
+          thumbnailUrl: repo.owner?.avatar_url
         },
         tags: [repo.language, ...(repo.topics ?? [])].filter(Boolean)
       });

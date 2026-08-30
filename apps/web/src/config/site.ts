@@ -107,7 +107,7 @@ const dictionaries: Record<SiteLocale, SiteCopy> = {
       secondaryAction: "浏览探索"
     },
     sections: {
-      now: "New",
+      now: "新信号",
       deck: "Deck",
       deckDescription: "六个板块，按深度轮换。内容来自社区发布与 Radar 摄入。",
       explore: "Explore",

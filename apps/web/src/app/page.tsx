@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, Bookmark, MessageSquare } from "lucide-react";
 import { site } from "@/config/site";
 import { getWorldSignals, type WorldSignal } from "@/features/radar/queries";
@@ -123,15 +124,16 @@ function NewFeed({
           const signal = item.signal;
           const content = (
             <>
+              {signal.thumbnailUrl ? <SignalThumbnail signal={signal} /> : null}
               <div className="font-mono text-xs text-white/34">
                 {signal.time} / {signal.phase} / {signal.domain}
               </div>
-              <h2 className="mt-3 line-clamp-2 text-xl font-medium leading-7 group-hover:text-[var(--yellow)]">
-                {signal.title}
+              <h2 className="mt-3 line-clamp-3 text-xl font-medium leading-7 group-hover:text-[var(--yellow)]">
+                {signal.summary ?? signal.title}
               </h2>
               {signal.summary ? (
                 <p className="mt-3 line-clamp-2 text-sm leading-6 text-white/52">
-                  {signal.summary}
+                  {signal.title}
                 </p>
               ) : null}
               <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-white/34">
@@ -147,7 +149,7 @@ function NewFeed({
 
           return signal.href ? (
             <a
-              className="ap-signal-card group block p-5"
+              className={`ap-signal-card group block p-5 ${signal.thumbnailUrl ? "ap-signal-card-with-media" : ""}`}
               href={signal.href}
               key={item.id}
               rel="noreferrer"
@@ -156,13 +158,30 @@ function NewFeed({
               {content}
             </a>
           ) : (
-            <article className="ap-signal-card group p-5" key={item.id}>
+            <article
+              className={`ap-signal-card group p-5 ${signal.thumbnailUrl ? "ap-signal-card-with-media" : ""}`}
+              key={item.id}
+            >
               {content}
             </article>
           );
         })}
       </div>
     </section>
+  );
+}
+
+function SignalThumbnail({ signal }: { signal: WorldSignal }) {
+  return (
+    <span aria-hidden className="ap-signal-thumb">
+      <Image
+        alt=""
+        fill
+        referrerPolicy="no-referrer"
+        sizes="(max-width: 720px) 72vw, 11rem"
+        src={signal.thumbnailUrl ?? ""}
+      />
+    </span>
   );
 }
 

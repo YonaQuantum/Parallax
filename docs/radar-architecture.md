@@ -65,6 +65,7 @@ type RadarItem = {
   fetchedAt: string;
   excerpt?: string;
   content?: string;
+  thumbnailUrl?: string;
   metrics?: {
     stars?: number;
     starsDelta24h?: number;
@@ -148,6 +149,8 @@ RADAR_LLM_MODEL=deepseek-chat
 ```
 
 关闭 `RADAR_LLM_ENABLED` 时，Radar 必须继续可运行：来源抓取、URL 归一、日期解析、精确去重、基础分类、摘要 fallback 和 Hybrid Ranking 都由程序完成。LLM 出错、超时或结构化输出校验失败时，只跳过当前语义增强，不停止整轮 pipeline。
+
+缩略图来自来源 feed、GitHub API、网页 `og:image` 或 `twitter:image`。主站只保存图片 URL 作 Signal 展示，不下载、不镜像外部图片，也不把图片当作本站原创素材。
 
 ## GitHub 个人页同步
 

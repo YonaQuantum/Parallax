@@ -18,6 +18,7 @@
 - 每条 Signal 的阶段：`NEW`、`RISING`、`ACTIVE`、`COOLING`。
 - 每条 Signal 的原始来源。
 - 每条 Signal 的简短解释：为什么值得看。Radar metadata 使用 `whyItMatters`，并在第一阶段兼容写入 `whyInteresting`。
+- 可选缩略图 `thumbnailUrl`：来自 feed、GitHub API 或网页 Open Graph metadata，只作为外部引用展示。
 
 已有接口：
 
@@ -55,6 +56,7 @@ GET /api/observatory/stream
 
 - 标题
 - 原始 URL
+- 可选缩略图 URL
 - 领域
 - 热度
 - 质量分
@@ -125,5 +127,6 @@ Radar 不要只看总 star，要结合：
 - 不要把 Radar 观测冒充社区成员原创。
 - 不要展示 Radar 在线状态、遥测或调试信息作为装饰。
 - 不要直接展示未经处理的大段抓取全文。
+- 不要把外部缩略图下载后伪装成本地素材。
 - 不要让 Radar 自动发布正式内容。
 - 不要做聊天气泡式助手。

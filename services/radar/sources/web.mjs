@@ -7,6 +7,7 @@ export async function collectWeb(source, limit, context) {
     externalId: `web:${url}`,
     title: compactText(source.titles?.[index] ?? source.title ?? url),
     url,
+    thumbnailUrl: source.thumbnailUrl,
     summary: "",
     rawText: "",
     qualityScore: source.trustScore ?? 0.5,
