@@ -77,7 +77,7 @@ collect
 
 `runner.mjs` 只负责配置、调度一轮采集和调用主站 API。具体能力分布在：
 
-- `sources/`：RSS / Atom、GitHub Search、arXiv、普通 Web 的 adapter 边界。
+- `sources/`：RSS / Atom、GitHub Search、Hacker News（Algolia）、arXiv、普通 Web 的 adapter 边界。
 - `normalize/`：URL canonicalization、日期解析、metrics 标准化、fingerprint。
 - `dedupe/`：source GUID、canonical URL、content fingerprint 精确去重，以及 bounded 同事件 fallback。
 - `fetch/`：网页正文获取、clean text 和 `og:image` / `twitter:image` 抽取，不把原始 HTML 交给 LLM。
