@@ -1,0 +1,11 @@
+.env
+.env.local
+config.local.json
+.venv
+node_modules
+dist
+build
+data
+models
+indexes
+*.log

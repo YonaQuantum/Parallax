@@ -1,0 +1,637 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  MODERATOR
+  MEMBER
+}
+
+enum ContentType {
+  ARTICLE
+  DOC
+  VIDEO
+  NOTE
+}
+
+enum ContentStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum BodyFormat {
+  TIPTAP_JSON
+  MARKDOWN
+  MDX
+}
+
+enum ReactionType {
+  LIKE
+  THANKS
+  INSIGHTFUL
+}
+
+enum MediaProvider {
+  LOCAL
+  S3
+  REMOTE_URL
+}
+
+enum ExtensionStatus {
+  PROPOSED
+  ACTIVE
+  DISABLED
+}
+
+enum RelationType {
+  REFERENCES
+  BUILDS_ON
+  RELATED
+  SERIES_NEXT
+}
+
+enum AuraCardVariant {
+  MOON
+  WHITE
+}
+
+enum AuraIdentityStatus {
+  RESERVED
+  CLAIMED
+  SUSPENDED
+}
+
+enum AgentResidentStatus {
+  ACTIVE
+  STANDBY
+  SUSPENDED
+}
+
+enum AgentTaskStatus {
+  QUEUED
+  RUNNING
+  SUSPENDED
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum AgentTaskPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum AgentSignalSeverity {
+  INFO
+  NOTICE
+  WARNING
+  CRITICAL
+}
+
+enum KnowledgeDomain {
+  CODE
+  AI_MODELS
+  GAME_INTERACTION
+  HARDWARE_EMBEDDED
+  CREATIVE_MEDIA
+  SCIENCE_COSMOS
+  GENERAL
+}
+
+enum KnowledgeStreamKind {
+  SYNTAX
+  SYMBOL
+  SEMANTIC
+  BINARY
+  TIMESERIES
+  COORDINATE
+}
+
+enum KnowledgeInterference {
+  CLEAR
+  GRAY_NOISE
+  BLOCKED
+}
+
+enum MemoryLayer {
+  WORKING
+  WARM
+  DEEP_ARCHIVE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  image         String?
+  handle        String    @unique
+  bio           String?
+  role          UserRole  @default(MEMBER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts                Account[]
+  sessions                Session[]
+  contents                Content[]
+  comments                Comment[]
+  reactions               Reaction[]
+  bookmarks               Bookmark[]
+  notifications           Notification[]
+  mediaFiles              MediaFile[]
+  extensions              CommunityExtension[]
+  auraIdentity            AuraIdentity?
+  emailVerificationTokens EmailVerificationToken[]
+  canvasSnapshots         CanvasSnapshot[]
+  createdAgentTasks       AgentTask[]              @relation("AgentTaskCreator")
+  createdAgents           AgentResident[]          @relation("AgentCreator")
+  externalProjects        UserExternalProject[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(cuid())
+  email     String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([email, expiresAt])
+  @@index([userId, usedAt])
+}
+
+model AuraIdentity {
+  id                String             @id @default(cuid())
+  serial            String             @unique
+  code              String             @unique
+  generationVersion String
+  displayName       String
+  handle            String             @unique
+  quote             String?
+  skills            Json
+  cardVariant       AuraCardVariant    @default(WHITE)
+  status            AuraIdentityStatus @default(RESERVED)
+  isFounder         Boolean            @default(false)
+  avatarUrl         String?
+  cardBackgroundUrl String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, isFounder])
+}
+
+model Content {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  excerpt     String?
+  body        Json
+  bodyFormat  BodyFormat    @default(TIPTAP_JSON)
+  type        ContentType
+  status      ContentStatus @default(DRAFT)
+  coverImage  String?
+  videoUrl    String?
+  featured    Boolean       @default(false)
+  viewCount   Int           @default(0)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  tags              ContentTag[]
+  comments          Comment[]
+  reactions         Reaction[]
+  bookmarks         Bookmark[]
+  media             MediaFile[]
+  outgoingRelations ContentRelation[] @relation("ContentSourceRelations")
+  incomingRelations ContentRelation[] @relation("ContentTargetRelations")
+
+  @@index([status, type, publishedAt])
+  @@index([authorId])
+}
+
+model ContentRelation {
+  id        String       @id @default(cuid())
+  type      RelationType @default(RELATED)
+  label     String?
+  weight    Float        @default(1)
+  createdAt DateTime     @default(now())
+
+  sourceId String
+  source   Content @relation("ContentSourceRelations", fields: [sourceId], references: [id], onDelete: Cascade)
+
+  targetId String
+  target   Content @relation("ContentTargetRelations", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, targetId, type])
+  @@index([targetId])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  contents  ContentTag[]
+  artifacts IngestedArtifactTag[]
+}
+
+model ContentTag {
+  contentId String
+  tagId     String
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, tagId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contentId String
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Comment[] @relation("CommentReplies")
+
+  @@index([contentId, createdAt])
+}
+
+model Reaction {
+  id        String       @id @default(cuid())
+  type      ReactionType @default(LIKE)
+  createdAt DateTime     @default(now())
+
+  contentId String
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([contentId, userId, type])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  contentId String
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([contentId, userId])
+}
+
+model MediaFile {
+  id           String        @id @default(cuid())
+  provider     MediaProvider @default(LOCAL)
+  bucket       String?
+  objectKey    String
+  originalName String
+  mimeType     String
+  byteSize     BigInt
+  publicUrl    String?
+  checksum     String?
+  createdAt    DateTime      @default(now())
+
+  uploaderId String
+  uploader   User   @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+
+  contentId String?
+  content   Content? @relation(fields: [contentId], references: [id], onDelete: SetNull)
+
+  @@index([provider, objectKey])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  title     String
+  body      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+}
+
+model CommunityExtension {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String?
+  manifest    Json
+  status      ExtensionStatus @default(PROPOSED)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model UserExternalProject {
+  id             String   @id @default(cuid())
+  provider       String
+  externalId     String
+  fullName       String
+  url            String
+  description    String?
+  language       String?
+  stars          Int?
+  topics         Json?
+  selected       Boolean  @default(false)
+  metadata       Json?
+  lastSyncedAt   DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider, externalId])
+  @@index([userId, selected, lastSyncedAt])
+}
+
+model AgentResident {
+  id               String              @id @default(cuid())
+  slug             String              @unique
+  name             String
+  status           AgentResidentStatus @default(STANDBY)
+  scopes           Json?
+  config           Json?
+  heartbeatSeconds Int                 @default(30)
+  lastSeenAt       DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  createdById String?
+  createdBy   User?   @relation("AgentCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  memories  AgentMemory[]
+  tasks     AgentTask[]
+  telemetry AgentResourceSample[]
+  signals   AgentSignal[]
+  artifacts IngestedArtifact[]
+
+  @@index([status, lastSeenAt])
+}
+
+model AgentMemory {
+  id              String      @id @default(cuid())
+  key             String
+  layer           MemoryLayer @default(WORKING)
+  focus           Json
+  summary         String?     @db.Text
+  attentionScore  Float       @default(0.5)
+  lastActivatedAt DateTime    @default(now())
+  expiresAt       DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  agentId String
+  agent   AgentResident @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([agentId, key])
+  @@index([agentId, layer, lastActivatedAt])
+}
+
+model DomainClock {
+  id               String          @id @default(cuid())
+  domain           KnowledgeDomain @unique
+  heartbeatSeconds Int             @default(3600)
+  enabled          Boolean         @default(true)
+  cursor           Json?
+  lastTickAt       DateTime?
+  nextTickAt       DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model CanvasSnapshot {
+  id        String   @id @default(cuid())
+  boardKey  String
+  payload   Json
+  version   Int      @default(1)
+  clientId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, boardKey])
+  @@index([userId, updatedAt])
+}
+
+model KnowledgeSource {
+  id            String                @id @default(cuid())
+  url           String                @unique
+  title         String?
+  sourceType    String
+  domain        KnowledgeDomain       @default(GENERAL)
+  trustScore    Float                 @default(0.5)
+  interference  KnowledgeInterference @default(CLEAR)
+  lastFetchedAt DateTime?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  artifacts IngestedArtifact[]
+
+  @@index([domain, interference])
+}
+
+model IngestedArtifact {
+  id             String                @id @default(cuid())
+  externalId     String?
+  title          String
+  url            String?
+  domain         KnowledgeDomain       @default(GENERAL)
+  interference   KnowledgeInterference @default(CLEAR)
+  qualityScore   Float                 @default(0.5)
+  heat           Float                 @default(0.5)
+  rawDigest      String
+  metadata       Json?
+  freshnessUntil DateTime?
+  deepArchivedAt DateTime?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  agentId String?
+  agent   AgentResident? @relation(fields: [agentId], references: [id], onDelete: SetNull)
+
+  sourceId String?
+  source   KnowledgeSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  streams   KnowledgeStream[]
+  skeletons DerivedSkeleton[]
+  tags      IngestedArtifactTag[]
+
+  @@unique([agentId, externalId])
+  @@index([domain, heat, createdAt])
+  @@index([interference, deepArchivedAt])
+  @@index([agentId, createdAt])
+}
+
+model IngestedArtifactTag {
+  artifactId String
+  tagId      String
+
+  artifact IngestedArtifact @relation(fields: [artifactId], references: [id], onDelete: Cascade)
+  tag      Tag              @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([artifactId, tagId])
+  @@index([tagId])
+}
+
+model KnowledgeStream {
+  id        String              @id @default(cuid())
+  kind      KnowledgeStreamKind
+  content   String              @db.Text
+  weight    Float               @default(1)
+  tokens    Int?
+  createdAt DateTime            @default(now())
+
+  artifactId String
+  artifact   IngestedArtifact @relation(fields: [artifactId], references: [id], onDelete: Cascade)
+
+  @@index([kind])
+  @@index([artifactId, kind])
+}
+
+model DerivedSkeleton {
+  id        String              @id @default(cuid())
+  kind      KnowledgeStreamKind
+  payload   Json
+  createdAt DateTime            @default(now())
+
+  artifactId String
+  artifact   IngestedArtifact @relation(fields: [artifactId], references: [id], onDelete: Cascade)
+
+  @@index([kind, createdAt])
+}
+
+model AgentTask {
+  id          String            @id @default(cuid())
+  type        String
+  status      AgentTaskStatus   @default(QUEUED)
+  priority    AgentTaskPriority @default(NORMAL)
+  payload     Json
+  conclusion  Json?
+  error       String?           @db.Text
+  scheduledAt DateTime          @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  suspendedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  agentId String?
+  agent   AgentResident? @relation(fields: [agentId], references: [id], onDelete: SetNull)
+
+  createdById String?
+  createdBy   User?   @relation("AgentTaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([agentId, status, scheduledAt])
+  @@index([status, priority, scheduledAt])
+}
+
+model AgentResourceSample {
+  id             String   @id @default(cuid())
+  fps            Float?
+  cpuLoad        Float?
+  memoryPressure Float?
+  gpuLoad        Float?
+  batteryLevel   Float?
+  loadScore      Float    @default(0)
+  suggestedMode  String
+  createdAt      DateTime @default(now())
+
+  agentId String
+  agent   AgentResident @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@index([agentId, createdAt])
+}
+
+model AgentSignal {
+  id             String              @id @default(cuid())
+  severity       AgentSignalSeverity @default(INFO)
+  title          String
+  body           String?             @db.Text
+  payload        Json?
+  expiresAt      DateTime?
+  acknowledgedAt DateTime?
+  createdAt      DateTime            @default(now())
+
+  agentId String?
+  agent   AgentResident? @relation(fields: [agentId], references: [id], onDelete: SetNull)
+
+  @@index([severity, createdAt])
+  @@index([expiresAt])
+}

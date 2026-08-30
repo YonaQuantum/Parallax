@@ -1,0 +1,96 @@
+name: parallax
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: parallax-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-parallax}
+      POSTGRES_USER: ${POSTGRES_USER:-parallax}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-parallax}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - parallax_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-parallax} -d ${POSTGRES_DB:-parallax}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: parallax-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - parallax_redis:/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: parallax-minio
+    profiles:
+      - object-storage
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio-password}
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - parallax_minio:/data
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile
+    container_name: parallax-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      SITE_SERVICE_NAME: ${SITE_SERVICE_NAME:-parallax-community}
+      NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-PARALLAX}
+      NEXT_PUBLIC_SITE_LOCAL_NAME: ${NEXT_PUBLIC_SITE_LOCAL_NAME:-异视社区}
+      NEXT_PUBLIC_SITE_LOGO_TEXT: ${NEXT_PUBLIC_SITE_LOGO_TEXT:-PX}
+      NEXT_PUBLIC_SITE_LOCALE: ${NEXT_PUBLIC_SITE_LOCALE:-zh-CN}
+      NEXT_PUBLIC_SITE_DESCRIPTION: ${NEXT_PUBLIC_SITE_DESCRIPTION:-开源、自托管的综合技术社区，面向编程与开源、AI 与模型、游戏与交互、硬件与嵌入式、创作与媒体、科学与宇宙。}
+      NEXT_PUBLIC_RADAR_NAME: ${NEXT_PUBLIC_RADAR_NAME:-PARALLAX Radar}
+      NEXT_PUBLIC_SITE_ACCENT: "${NEXT_PUBLIC_SITE_ACCENT:-#ffd400}"
+      NEXT_PUBLIC_HALO_ASSET: ${NEXT_PUBLIC_HALO_ASSET:-}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-parallax}:${POSTGRES_PASSWORD:-parallax}@postgres:5432/${POSTGRES_DB:-parallax}?schema=public
+      REDIS_URL: redis://redis:6379
+      UPLOAD_DIR: /app/data/uploads
+      PUBLIC_UPLOAD_BASE_URL: /uploads
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      PARALLAX_BASE_URL: ${PARALLAX_BASE_URL:-http://web:3000}
+      RADAR_SHARED_SECRET: ${RADAR_SHARED_SECRET:-}
+      RADAR_CONFIG_PATH: /app/config/radars.local.json
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: parallax
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-minio}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minio-password}
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ../../data/uploads:/app/data/uploads
+      - ../../config:/app/config:ro
+
+volumes:
+  parallax_postgres:
+  parallax_redis:
+  parallax_minio:

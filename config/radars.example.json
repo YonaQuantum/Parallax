@@ -1,0 +1,51 @@
+{
+  "radars": [
+    {
+      "slug": "local-researcher",
+      "name": "PARALLAX Radar",
+      "enabled": false,
+      "providers": {
+        "openai": {
+          "apiKeyEnv": "OPENAI_API_KEY"
+        },
+        "github": {
+          "tokenEnv": "GITHUB_TOKEN"
+        }
+      },
+      "sources": [
+        {
+          "id": "code-open-source",
+          "type": "arxiv",
+          "title": "arXiv",
+          "domain": "CODE",
+          "query": "computer graphics rendering pipeline",
+          "heartbeatSeconds": 43200
+        },
+        {
+          "id": "github-hot-projects",
+          "type": "github",
+          "title": "GitHub",
+          "domain": "CODE",
+          "query": "shader game engine spectral rendering",
+          "heartbeatSeconds": 21600
+        },
+        {
+          "id": "ai-models",
+          "type": "model-release",
+          "title": "Model Releases",
+          "domain": "AI_MODELS",
+          "query": "local model rag open source"
+          "heartbeatSeconds": 21600
+        },
+        {
+          "id": "science-cosmos",
+          "type": "rss",
+          "title": "Science & Cosmos",
+          "domain": "SCIENCE_COSMOS",
+          "query": "cosmic life exoplanet philosophy consciousness ai agency",
+          "heartbeatSeconds": 43200
+        }
+      ]
+    }
+  ]
+}
