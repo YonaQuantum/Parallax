@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # PARALLAX 协作说明
 
-这个仓库是中文技术社区 PARALLAX（异视社区）的开源本体。修改代码时请优先保持以下约定：
+这个仓库是中文技术社区 PARALLAX（视差社区）的开源本体。修改代码时请优先保持以下约定：
 
 - 文档面向中文读者，新增项目文档默认使用中文。
 - Web 源码统一放在 `apps/web/src/` 下，避免根目录平铺业务代码。
@@ -20,7 +20,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Node 开发环境优先使用 `.tools/node` 和 `.cache/npm`。
 - 修改数据库模型时，同步更新 `packages/db/prisma` 下的 Prisma migration 和 `docs/architecture.md`。
 - 修改部署方式时，同步更新 `docs/deployment-1panel.md`。
+- 遇到新的开发坑、迁移折中、提交身份或隐私风险时，同步更新 `docs/development-handbook.md`。
 - 插件、主题、内容块和平台集成应尽量通过清晰的扩展点进入系统。
+
+## 提交约定
+
+- 提交前确认 `git config user.name` 和 `git config user.email` 指向仓库维护者确认过的 GitHub 身份。
+- 提交信息使用 Conventional Commits 类型，加中文说明，例如 `docs: 更新开发协作手册`。
+- 不把真实成员资料、真实密钥、`.env`、上传文件、Radar 本地索引或模型文件提交到 Git。
 
 ## 界面设计原则
 

@@ -72,7 +72,7 @@ type SiteCopy = {
 
 const locale = normalizeLocale(process.env.NEXT_PUBLIC_SITE_LOCALE);
 const brandName = readEnv("NEXT_PUBLIC_SITE_NAME", "PARALLAX");
-const localName = readEnv("NEXT_PUBLIC_SITE_LOCAL_NAME", "异视社区");
+const localName = readEnv("NEXT_PUBLIC_SITE_LOCAL_NAME", "视差社区");
 const logoText = readEnv("NEXT_PUBLIC_SITE_LOGO_TEXT", "PX");
 
 const dictionaries: Record<SiteLocale, SiteCopy> = {
@@ -102,7 +102,7 @@ const dictionaries: Record<SiteLocale, SiteCopy> = {
     hero: {
       eyebrow: "自托管 · 开放协作 · 面向未来",
       headline: "探索 · 创造 · 共建",
-      description: "一个以异视为方法的开放技术社区。\n在这里，代码、创意与思想相遇，推动未来发生。",
+      description: "一个以视差为方法的开放技术社区。\n在这里，代码、创意与思想相遇，推动未来发生。",
       primaryAction: "发布第一篇",
       secondaryAction: "浏览探索"
     },
