@@ -18,3 +18,4 @@ services/radar/data
 services/radar/indexes
 services/radar/models
 *.log
+*.tsbuildinfo

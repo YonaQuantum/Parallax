@@ -24,8 +24,7 @@ export async function GET(request: Request) {
     : {
         interference: {
           not: KnowledgeInterference.BLOCKED
-        },
-        deepArchivedAt: null
+        }
       };
   const [artifacts, signals, clocks, domainHeat] = await Promise.all([
     prisma.ingestedArtifact.findMany({
