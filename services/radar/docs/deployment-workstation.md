@@ -19,10 +19,11 @@ GPU 工作站 Radar
 ```txt
 PARALLAX_BASE_URL=https://你的 PARALLAX 域名
 RADAR_SHARED_SECRET=和主站 .env 一致的长随机字符串
-LOCAL_LLM_BASE_URL=http://127.0.0.1:11434/v1
-LOCAL_LLM_API_KEY=可为空或本地服务要求的 key
-LOCAL_EMBEDDING_BASE_URL=http://127.0.0.1:11434/v1
-LOCAL_EMBEDDING_API_KEY=可为空或本地服务要求的 key
+RADAR_LLM_ENABLED=true
+RADAR_LLM_PROVIDER=openai-compatible
+RADAR_LLM_BASE_URL=http://127.0.0.1:11434/v1
+RADAR_LLM_API_KEY=可为空或本地服务要求的 key
+RADAR_LLM_MODEL=本地服务暴露的模型名
 GITHUB_TOKEN=GitHub personal access token
 ```
 
@@ -34,6 +35,7 @@ GITHUB_TOKEN=GitHub personal access token
 - Embedding：BGE、Jina、E5 系列本地 embedding。
 - Rerank：BGE reranker 或兼容模型。
 - 服务方式：Ollama、vLLM、llama.cpp server、text-generation-webui 均可，优先选择稳定和易维护。
+- Radar 只要求聊天补全接口兼容 OpenAI `/v1/chat/completions`，模型厂商和运行框架不应写死在业务逻辑里。
 
 ## RAG 存储
 
