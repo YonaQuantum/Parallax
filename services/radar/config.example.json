@@ -43,6 +43,16 @@
   },
   "sources": [
     {
+      "id": "hacker-news",
+      "title": "Hacker News",
+      "type": "hn",
+      "domain": "CODE",
+      "tags": ["Hacker News", "社区热度"],
+      "enabled": false,
+      "heartbeatSeconds": 3600,
+      "queries": ["front_page", "show_hn"]
+    },
+    {
       "id": "github-hot-projects",
       "title": "GitHub",
       "type": "github-search",

@@ -1,12 +1,15 @@
 import { asArray } from "../pipeline/utils.mjs";
 import { collectArxiv } from "./arxiv.mjs";
 import { collectGitHub } from "./github.mjs";
+import { collectHackerNews } from "./hn.mjs";
 import { collectRss } from "./rss.mjs";
 import { collectWeb } from "./web.mjs";
 
 const adapters = new Map([
   ["github", collectGitHub],
   ["github-search", collectGitHub],
+  ["hn", collectHackerNews],
+  ["hacker-news", collectHackerNews],
   ["arxiv", collectArxiv],
   ["rss", collectRss],
   ["rss-or-api", collectRss],
