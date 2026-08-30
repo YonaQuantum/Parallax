@@ -105,7 +105,8 @@ export async function GET(request: Request) {
   return NextResponse.json({
     artifacts: artifacts.map((artifact) => ({
       id: artifact.id,
-      title: artifact.title,
+      title: readString(asRecord(artifact.metadata), "displayTitle") ?? artifact.title,
+      rawTitle: artifact.title,
       url: artifact.url,
       summary: readSignalSummary(asRecord(artifact.metadata), artifact.domain),
       thumbnailUrl: readUrl(asRecord(artifact.metadata), "thumbnailUrl"),

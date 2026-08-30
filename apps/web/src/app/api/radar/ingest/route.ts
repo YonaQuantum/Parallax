@@ -14,6 +14,7 @@ import {
   scoreInterference,
   splitKnowledgeStreams
 } from "@/server/radar/prism";
+import { recycleExternalArtifacts } from "@/server/radar/retention";
 import { upsertRadarResident } from "@/server/radar/residents";
 import { requireRadarAccess } from "@/server/radar/security";
 import { prisma } from "@/server/db/prisma";
@@ -53,6 +54,8 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid artifact" }, { status: 400 });
   }
+
+  await recycleExternalArtifacts();
 
   const radar = await upsertRadarResident({
     slug: parsed.data.slug
@@ -95,10 +98,10 @@ export async function POST(request: Request) {
 
   const streams = splitKnowledgeStreams(parsed.data.rawText);
   const skeletons = deriveSkeletons(parsed.data.rawText);
-  const tagNames = normalizeTagNames([
+  const tagNames = uniqueTagNamesBySlug(normalizeTagNames([
     domainTagName[domain],
     ...(parsed.data.tags ?? [])
-  ]);
+  ]));
   const artifactData = {
     title: parsed.data.title,
     url: parsed.data.url ?? sourceUrl,
@@ -292,3 +295,15 @@ const domainTagName: Record<KnowledgeDomain, string> = {
   SCIENCE_COSMOS: "科学与宇宙",
   GENERAL: "通用"
 };
+
+function uniqueTagNamesBySlug(names: string[]) {
+  const seen = new Set<string>();
+  return names.filter((name) => {
+    const slug = createTagSlug(name);
+    if (seen.has(slug)) {
+      return false;
+    }
+    seen.add(slug);
+    return true;
+  });
+}

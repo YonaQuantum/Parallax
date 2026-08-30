@@ -49,6 +49,7 @@ export function buildEnrichPrompt(source, item) {
     "Return JSON with exactly these keys:",
     "{",
     "  \"category\": \"code | ai | game | hardware | create | science\",",
+    "  \"displayTitle\": \"用于前端展示的简短中文标题，最多24个汉字；专有名词可保留英文\",",
     "  \"topics\": [\"maximum 6 concise topic names\"],",
     "  \"summary\": \"用简洁中文说明发生了什么，50-100字\",",
     "  \"whyItMatters\": \"说明它为什么可能值得 Parallax 用户关注，最多80字\",",

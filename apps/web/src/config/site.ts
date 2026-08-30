@@ -108,8 +108,8 @@ const dictionaries: Record<SiteLocale, SiteCopy> = {
     },
     sections: {
       now: "新信号",
-      deck: "Deck",
-      deckDescription: "六个板块，按深度轮换。内容来自社区发布与 Radar 摄入。",
+      deck: "领域索引",
+      deckDescription: "六个入口，连接社区创作与外部信号。",
       explore: "Explore",
       fromCommunity: `From ${brandName}`,
       latest: "Latest",
@@ -208,8 +208,8 @@ const dictionaries: Record<SiteLocale, SiteCopy> = {
     },
     sections: {
       now: "New",
-      deck: "Deck",
-      deckDescription: "Six boards in a rotating depth stack. Content comes from community publishing and Radar ingestion.",
+      deck: "Domain Index",
+      deckDescription: "Six entry points linking community work and external signals.",
       explore: "Explore",
       fromCommunity: `From ${brandName}`,
       latest: "Latest",

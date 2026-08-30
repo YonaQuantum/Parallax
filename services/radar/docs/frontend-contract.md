@@ -17,6 +17,7 @@
   - 科学与宇宙领域的 NASA、ESA、JWST、系外行星、宇宙生命和科学哲学资料
 - 每条 Signal 的阶段：`NEW`、`RISING`、`ACTIVE`、`COOLING`。
 - 每条 Signal 的原始来源。
+- 每条 Signal 的短标题：优先读 `metadata.displayTitle`，原始标题仍用于溯源。
 - 每条 Signal 的简短解释：为什么值得看。Radar metadata 使用 `whyItMatters`，并在第一阶段兼容写入 `whyInteresting`。
 - 可选缩略图 `thumbnailUrl`：来自 feed、GitHub API 或网页 Open Graph metadata，只作为外部引用展示；RSS 来源可在预过滤后补抓原文页 metadata。
 

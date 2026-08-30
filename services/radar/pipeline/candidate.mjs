@@ -90,6 +90,7 @@ export function heuristicCandidate(source, item) {
   return {
     primaryCategory,
     category: primaryCategory,
+    displayTitle: "",
     topics,
     summary,
     whyItMatters: defaultWhyItMatters(source.domain),
@@ -116,6 +117,7 @@ export function mergeCandidate(fallback, enrichment) {
   return {
     primaryCategory,
     category: primaryCategory,
+    displayTitle: clampText(compactText(enrichment.displayTitle ?? fallback.displayTitle), 36),
     topics,
     summary: clampText(compactText(enrichment.summary ?? fallback.summary), 140),
     whyItMatters: clampText(compactText(enrichment.whyItMatters ?? fallback.whyItMatters), 120),
@@ -182,6 +184,7 @@ export function toIngestPayload(slug, source, item, candidate) {
   const domain = CATEGORY_TO_DOMAIN[candidate.primaryCategory ?? candidate.category] ?? source.domain;
   const summary = candidate.summary || item.excerpt || "";
   const thumbnailUrl = normalizeExternalUrl(item.thumbnailUrl ?? item.rawMetadata?.thumbnailUrl);
+  const displayTitle = candidate.displayTitle || undefined;
   return {
     slug,
     source: {
@@ -205,6 +208,8 @@ export function toIngestPayload(slug, source, item, candidate) {
     metadata: {
       ...item.rawMetadata,
       canonicalUrl: item.canonicalUrl,
+      rawTitle: item.title,
+      displayTitle,
       fingerprint: item.fingerprint,
       fetchedAt: item.fetchedAt,
       publishedAt: item.publishedAt,
