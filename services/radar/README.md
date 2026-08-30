@@ -80,7 +80,7 @@ collect
 - `sources/`：RSS / Atom、GitHub Search、arXiv、普通 Web 的 adapter 边界。
 - `normalize/`：URL canonicalization、日期解析、metrics 标准化、fingerprint。
 - `dedupe/`：source GUID、canonical URL、content fingerprint 精确去重，以及 bounded 同事件 fallback。
-- `fetch/`：网页正文获取与 clean text 抽取，不把原始 HTML 交给 LLM。
+- `fetch/`：网页正文获取、clean text 和 `og:image` / `twitter:image` 抽取，不把原始 HTML 交给 LLM。
 - `llm/`：OpenAI-compatible provider、版本化 prompt、结构化输出校验。
 - `rank/`：可配置 Hybrid Ranking。
 - `pipeline/`：把各阶段串成可测试流程。
@@ -126,6 +126,8 @@ RADAR_LLM_MODEL=deepseek-chat
 ```
 
 LLM 可随时关闭。关闭后 Radar 仍会执行收集、标准化、去重、预过滤、启发式分类和排序，只是摘要与语义标签会更朴素。
+
+缩略图只保存外部 URL，用于前端 Signal 卡片展示。Radar 不下载、不镜像外部图片。
 
 写入一次真实资料：
 

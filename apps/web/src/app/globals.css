@@ -265,8 +265,50 @@ textarea {
 }
 
 .ap-signal-card {
+  position: relative;
   min-height: 190px;
+  overflow: hidden;
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+.ap-signal-card-with-media {
+  padding-right: clamp(1.25rem, 23vw, 13rem);
+}
+
+.ap-signal-thumb {
+  position: absolute;
+  inset: 1rem 1rem auto auto;
+  width: clamp(7rem, 18vw, 11rem);
+  aspect-ratio: 1.55;
+  clip-path: polygon(18% 0, 100% 0, 82% 100%, 0 100%);
+  border: 1px solid rgba(242, 245, 255, 0.14);
+  background:
+    linear-gradient(135deg, rgba(242, 245, 255, 0.12), transparent),
+    rgba(242, 245, 255, 0.045);
+  opacity: 0.72;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease;
+}
+
+.ap-signal-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.75) contrast(1.08) brightness(0.78);
+  transform: scale(1.04);
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+.ap-signal-card:hover .ap-signal-thumb {
+  border-color: rgba(255, 212, 0, 0.38);
+  opacity: 0.9;
+  transform: translate3d(-2px, 0, 0);
+}
+
+.ap-signal-card:hover .ap-signal-thumb img {
+  filter: saturate(0.98) contrast(1.12) brightness(0.88);
+  transform: scale(1.08);
 }
 
 .ap-liquid-glass {
@@ -455,6 +497,17 @@ textarea {
   .ap-depth-card {
     top: 7.5rem;
     min-height: 24rem;
+  }
+
+  .ap-signal-card-with-media {
+    padding-top: 7.75rem;
+    padding-right: 1.25rem;
+  }
+
+  .ap-signal-thumb {
+    left: 1rem;
+    right: auto;
+    width: min(72%, 13rem);
   }
 }
 

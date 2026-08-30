@@ -56,6 +56,7 @@
     "externalId": "rss:godot-spectrum-tools",
     "title": "Godot plugin experiments with spectrum-based lighting tools",
     "url": "https://example.org/godot-spectrum-tools",
+    "thumbnailUrl": "https://images.example.org/godot-spectrum.jpg",
     "summary": "A game tooling article describes spectrum-driven lighting controls for realtime prototypes.",
     "rawText": "Godot plugin experiments with spectrum-based lighting tools\nThe prototype exposes spectral controls to artists building realtime scenes.",
     "metadata": {
@@ -94,6 +95,7 @@
     "externalId": "rss:exo-life-atmospheres",
     "title": "New telescope observations refine exoplanet atmosphere models",
     "url": "https://example.org/exoplanet-atmospheres",
+    "thumbnailUrl": "https://images.example.org/exoplanet-atmospheres.jpg",
     "summary": "A science report describes improved exoplanet atmosphere constraints and biosignature limits.",
     "rawText": "New telescope observations refine exoplanet atmosphere models\nThe report discusses constraints on atmosphere composition and limits for biosignature interpretation.",
     "metadata": {

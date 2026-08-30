@@ -28,6 +28,22 @@ export function canonicalizeUrl(value) {
   }
 }
 
+export function normalizeExternalUrl(value) {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(value);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      return undefined;
+    }
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
 export function normalizeTitle(value) {
   return compactText(value).toLowerCase().replace(/[^\p{Letter}\p{Number}]+/gu, " ").trim();
 }

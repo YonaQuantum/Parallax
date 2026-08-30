@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { describe, it } from "node:test";
 import { eventRelationFallback, exactDedupe } from "../dedupe/index.mjs";
-import { extractReadableText } from "../fetch/content.mjs";
+import { extractOpenGraphImage, extractReadableText } from "../fetch/content.mjs";
 import {
   buildSignalCandidate,
   prepareRadarItems,
@@ -221,6 +221,7 @@ describe("Radar pipeline primitives", () => {
         externalId: "science:test",
         title: "Exoplanet signal",
         url: "https://example.org/exoplanet?utm_source=feed",
+        thumbnailUrl: "https://images.example.org/exoplanet.jpg",
         summary: "A science source updates exoplanet observations.",
         rawText: "A science source updates exoplanet observations.",
         metadata: {
@@ -234,6 +235,7 @@ describe("Radar pipeline primitives", () => {
     assert.equal(payload.metadata.signalCandidate.primaryCategory, "science");
     assert.equal(payload.metadata.whyInteresting, payload.metadata.whyItMatters);
     assert.equal(payload.metadata.canonicalUrl, "https://example.org/exoplanet");
+    assert.equal(payload.metadata.thumbnailUrl, "https://images.example.org/exoplanet.jpg");
     assert.ok(payload.metadata.fingerprint);
   });
 
@@ -259,6 +261,16 @@ describe("Radar pipeline primitives", () => {
     assert.match(text, /Signal/);
     assert.match(text, /Readable/);
     assert.doesNotMatch(text, /alert/);
+  });
+
+  it("extracts Open Graph image URLs from fetched pages", () => {
+    const image = extractOpenGraphImage(`
+      <html>
+        <head><meta property="og:image" content="https://images.example.org/card.png"></head>
+      </html>
+    `);
+
+    assert.equal(image, "https://images.example.org/card.png");
   });
 });
 

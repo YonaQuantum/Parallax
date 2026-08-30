@@ -24,8 +24,10 @@ export async function fetchContentForItem(source, item, context = {}) {
     return {
       ...item,
       content: extracted,
+      thumbnailUrl: item.thumbnailUrl ?? extractOpenGraphImage(html),
       rawMetadata: {
         ...item.rawMetadata,
+        thumbnailUrl: item.rawMetadata?.thumbnailUrl ?? item.thumbnailUrl ?? extractOpenGraphImage(html),
         contentFetchedAt: new Date().toISOString(),
         contentFetched: true
       }
@@ -53,7 +55,28 @@ export function extractReadableText(html, limit = DEFAULT_CONTENT_LIMIT) {
   return clampText(compactText([title, stripHtml(body)].filter(Boolean).join("\n")), limit);
 }
 
+export function extractOpenGraphImage(html) {
+  return metaContent(html, "property", "og:image") ||
+    metaContent(html, "name", "twitter:image") ||
+    "";
+}
+
 function textOfTag(html, tag) {
   const match = html.match(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)</${tag}>`, "i"));
   return match?.[1] ?? "";
+}
+
+function metaContent(html, key, value) {
+  for (const match of String(html ?? "").matchAll(/<meta\b([^>]*)>/gi)) {
+    const attrs = match[1];
+    if (readAttr(attrs, key) === value) {
+      return readAttr(attrs, "content");
+    }
+  }
+
+  return "";
+}
+
+function readAttr(attrs, name) {
+  return attrs.match(new RegExp(`${name}=["']([^"']+)["']`, "i"))?.[1] ?? "";
 }

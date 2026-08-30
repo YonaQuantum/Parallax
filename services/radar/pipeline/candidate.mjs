@@ -7,6 +7,7 @@ import {
   compactText,
   createFingerprint,
   detectLanguage,
+  normalizeExternalUrl,
   normalizeTitle,
   uniqueTags
 } from "./utils.mjs";
@@ -180,6 +181,7 @@ export function fuzzyDuplicateCandidate(a, b) {
 export function toIngestPayload(slug, source, item, candidate) {
   const domain = CATEGORY_TO_DOMAIN[candidate.primaryCategory ?? candidate.category] ?? source.domain;
   const summary = candidate.summary || item.excerpt || "";
+  const thumbnailUrl = normalizeExternalUrl(item.thumbnailUrl ?? item.rawMetadata?.thumbnailUrl);
   return {
     slug,
     source: {
@@ -206,6 +208,7 @@ export function toIngestPayload(slug, source, item, candidate) {
       fingerprint: item.fingerprint,
       fetchedAt: item.fetchedAt,
       publishedAt: item.publishedAt,
+      thumbnailUrl,
       summary,
       whyItMatters: candidate.whyItMatters,
       whyInteresting: candidate.whyItMatters,
