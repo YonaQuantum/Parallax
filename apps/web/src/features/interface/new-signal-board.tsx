@@ -1,10 +1,6 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import type { CSSProperties } from "react";
-import { useEffect, useMemo, useState } from "react";
 
 export type SignalBoardItem = {
   id: string;
@@ -20,13 +16,9 @@ export type SignalBoardItem = {
 };
 
 const slotCount = 6;
-const durationMs = 10_000;
-const flipMs = 620;
-const switchAtMs = 310;
-const initialDelays = [2400, 0, 3000, 700, 3600, 1400];
 
 export function NewSignalBoard({ items }: { items: SignalBoardItem[] }) {
-  const slots = useMemo(() => items.slice(0, slotCount), [items]);
+  const slots = items.slice(0, slotCount);
 
   if (slots.length === 0) {
     return null;
@@ -34,111 +26,40 @@ export function NewSignalBoard({ items }: { items: SignalBoardItem[] }) {
 
   return (
     <div className="mt-5 grid gap-3 md:grid-cols-2">
-      {slots.map((item, index) => (
-        <SignalSlot
-          index={index}
-          items={items}
-          key={`${index}-${item.id}`}
+      {slots.map((item) => (
+        <SignalCard
+          item={item}
+          key={item.id}
         />
       ))}
     </div>
   );
 }
 
-function SignalSlot({
-  index,
-  items
-}: {
-  index: number;
-  items: SignalBoardItem[];
-}) {
-  const [cycle, setCycle] = useState(0);
-  const [flipping, setFlipping] = useState(false);
-  const [held, setHeld] = useState(false);
-  const [progressKey, setProgressKey] = useState(0);
-  const item = items[(index + cycle) % items.length];
-  const nextItem = items[(index + cycle + slotCount) % items.length];
-  const activeItem = flipping && nextItem ? nextItem : item;
-  const canFlip = items.length > slotCount;
-  const firstDelay = progressKey === 0 ? initialDelays[index] ?? 0 : 0;
-
-  useEffect(() => {
-    if (held || !canFlip) {
-      return;
-    }
-
-    let switchTimer: number | undefined;
-    let doneTimer: number | undefined;
-    const timer = window.setTimeout(() => {
-      setFlipping(true);
-      switchTimer = window.setTimeout(() => {
-        setCycle((value) => value + slotCount);
-      }, switchAtMs);
-      doneTimer = window.setTimeout(() => {
-        setFlipping(false);
-        setProgressKey((value) => value + 1);
-      }, flipMs);
-    }, durationMs + firstDelay);
-
-    return () => {
-      window.clearTimeout(timer);
-      if (switchTimer) {
-        window.clearTimeout(switchTimer);
-      }
-      if (doneTimer) {
-        window.clearTimeout(doneTimer);
-      }
-    };
-  }, [canFlip, firstDelay, held, progressKey]);
-
-  const content = <SignalPanel item={activeItem} />;
+function SignalCard({ item }: { item: SignalBoardItem }) {
   const className = [
     "ap-signal-card",
-    "ap-signal-flip-card",
     "group",
     "block",
     "p-5",
-    activeItem.thumbnailUrl ? "ap-signal-card-with-media" : "",
-    flipping ? "is-flipping" : "",
-    held ? "is-held" : ""
+    item.thumbnailUrl ? "ap-signal-card-with-media" : ""
   ].filter(Boolean).join(" ");
-  const style = {
-    "--signal-duration": `${durationMs}ms`,
-    "--signal-delay": `${firstDelay}ms`
-  } as CSSProperties;
-
-  const resetAndHold = () => {
-    setHeld(true);
-    setProgressKey((value) => value + 1);
-  };
-  const resumeFromZero = () => {
-    setHeld(false);
-    setProgressKey((value) => value + 1);
-  };
 
   return item.external ? (
     <a
       className={className}
       href={item.href}
-      onMouseEnter={resetAndHold}
-      onMouseLeave={resumeFromZero}
       rel="noreferrer"
-      style={style}
       target="_blank"
     >
-      <span className="ap-signal-flip-inner">{content}</span>
-      {canFlip ? <span className="ap-signal-progress" key={progressKey} /> : null}
+      <SignalPanel item={item} />
     </a>
   ) : (
     <Link
       className={className}
       href={item.href}
-      onMouseEnter={resetAndHold}
-      onMouseLeave={resumeFromZero}
-      style={style}
     >
-      <span className="ap-signal-flip-inner">{content}</span>
-      {canFlip ? <span className="ap-signal-progress" key={progressKey} /> : null}
+      <SignalPanel item={item} />
     </Link>
   );
 }
