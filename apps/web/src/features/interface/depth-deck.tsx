@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { site } from "@/config/site";
 import type { SiteDomainCode } from "@/config/site";
 import { domainIcons } from "@/features/interface/chrome";
@@ -18,7 +18,13 @@ export function DepthDeck({ domains }: { domains: DeckDomain[] }) {
     <section className="ap-domain-index" aria-label="PARALLAX domains">
       <div className="ap-domain-index-head">
         <h2>{site.copy.sections.deck}</h2>
-        <p>{site.copy.sections.deckDescription}</p>
+        <form action="/explore" className="ap-domain-search">
+          <Search size={16} />
+          <input
+            name="q"
+            placeholder={site.copy.search.globalPlaceholder}
+          />
+        </form>
       </div>
       <div className="ap-domain-list">
         {domains.map((domain, index) => {

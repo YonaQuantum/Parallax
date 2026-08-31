@@ -12,7 +12,6 @@ import {
   Music2,
   Plus,
   RadioTower,
-  Search,
   Sparkles
 } from "lucide-react";
 import { site, type SiteDomainCode } from "@/config/site";
@@ -59,18 +58,7 @@ export function MainHeader() {
             </Link>
           ))}
         </nav>
-        <form
-          action="/explore"
-          className="ml-auto hidden h-10 w-full max-w-md items-center gap-2 border border-white/[0.08] bg-white/[0.035] px-3 text-sm text-white/42 transition focus-within:border-white/18 focus-within:bg-white/[0.055] lg:flex"
-        >
-          <Search size={15} />
-          <input
-            name="q"
-            className="w-full bg-transparent outline-none placeholder:text-white/32"
-            placeholder={site.copy.search.globalPlaceholder}
-          />
-        </form>
-        <Link className="ml-auto inline-flex h-10 items-center gap-2 border border-white/[0.08] px-4 text-sm text-white/72 hover:border-white/18 hover:text-white md:ml-0" href="/login">
+        <Link className="ml-auto inline-flex h-10 items-center gap-2 border border-white/[0.08] px-4 text-sm text-white/72 hover:border-white/18 hover:text-white" href="/login">
           <LogIn size={15} />
           {site.copy.nav.login}
         </Link>
