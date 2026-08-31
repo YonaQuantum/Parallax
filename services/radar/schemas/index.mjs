@@ -24,9 +24,10 @@ export function validateSignalCandidate(input) {
 
   const missing = [];
   if (!candidate.primaryCategory) missing.push("primaryCategory");
+  if (!candidate.displayTitle || !hasChinese(candidate.displayTitle)) missing.push("displayTitle");
   if (candidate.topics.length === 0) missing.push("topics");
-  if (!candidate.summary) missing.push("summary");
-  if (!candidate.whyItMatters) missing.push("whyItMatters");
+  if (!candidate.summary || isWeakEditorialText(candidate.summary)) missing.push("summary");
+  if (!candidate.whyItMatters || isWeakEditorialText(candidate.whyItMatters)) missing.push("whyItMatters");
   if (candidate.novelty === undefined) missing.push("novelty");
   if (candidate.editorialInterest === undefined) missing.push("editorialInterest");
   if (candidate.confidence === undefined) missing.push("confidence");
@@ -109,4 +110,14 @@ function normalizeScore(value) {
     return undefined;
   }
   return Math.min(1, Math.max(0, number));
+}
+
+function hasChinese(value) {
+  return /[\u4e00-\u9fff]/.test(value);
+}
+
+function isWeakEditorialText(value) {
+  return /进\s*入\s*视\s*野/.test(value) ||
+    /^(可能|或许|也许)/.test(value) ||
+    /^(maybe|may|might|possibly)\b/i.test(value);
 }

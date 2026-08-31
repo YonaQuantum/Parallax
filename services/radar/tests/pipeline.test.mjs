@@ -161,7 +161,7 @@ describe("Radar pipeline primitives", () => {
       displayTitle: "本地 RAG 工具更新",
       topics: ["Agent", "RAG"],
       summary: "一项模型工具更新发布，聚焦本地检索增强流程。",
-      whyItMatters: "它可能影响社区的本地知识流建设。",
+      whyItMatters: "它直接服务社区的本地知识流建设。",
       novelty: 0.7,
       editorialInterest: 0.66,
       confidence: 0.8,

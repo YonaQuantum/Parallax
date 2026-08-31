@@ -16,6 +16,7 @@
 ## 当前约定
 
 - 项目公开名称为 `PARALLAX`，中文名为“视差社区”。
+- 核心产品判断记录在 `docs/product-memory.md`。涉及首页新信号、领域入口、Radar 展示和文案调性时，应先读取该文档。
 - Web 应用位于 `apps/web`，当前 Next Route Handlers 同时承载主站 API。
 - `apps/api` 是后续独立 API 服务边界，当前不作为运行入口。
 - Radar 位于 `services/radar`，只通过 HTTP API 写入主站，不直接连接主站数据库。

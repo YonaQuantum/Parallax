@@ -271,6 +271,47 @@ textarea {
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
 }
 
+.ap-signal-flip-card {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.ap-signal-flip-inner {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-height: 150px;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+}
+
+.ap-signal-flip-card.is-flipping .ap-signal-flip-inner {
+  animation: ap-signal-x-flip 620ms cubic-bezier(0.2, 0.68, 0.2, 1) both;
+}
+
+.ap-signal-progress {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  height: 1px;
+  background: rgba(242, 245, 255, 0.08);
+}
+
+.ap-signal-progress::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(255, 214, 10, 0.82) 32%, rgba(242, 245, 255, 0.88));
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: ap-signal-progress var(--signal-duration) linear var(--signal-delay) forwards;
+}
+
+.ap-signal-flip-card.is-held .ap-signal-progress::after {
+  animation: none;
+  transform: scaleX(0);
+}
+
 .ap-signal-card-with-media {
   padding-right: clamp(1.25rem, 36vw, 22rem);
 }
@@ -282,8 +323,8 @@ textarea {
   opacity: 0.78;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
-  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.08) 14%, rgba(0, 0, 0, 0.28) 32%, rgba(0, 0, 0, 0.68) 54%, #000 72%, #000 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.08) 14%, rgba(0, 0, 0, 0.28) 32%, rgba(0, 0, 0, 0.68) 54%, #000 72%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.04) 8%, rgba(0, 0, 0, 0.2) 24%, rgba(0, 0, 0, 0.58) 42%, #000 61%, #000 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.04) 8%, rgba(0, 0, 0, 0.2) 24%, rgba(0, 0, 0, 0.58) 42%, #000 61%, #000 100%);
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
@@ -621,12 +662,12 @@ textarea {
   }
 
   .ap-signal-card-with-media {
-    padding-right: clamp(1.25rem, 38vw, 8.5rem);
+    padding-right: clamp(1rem, 34vw, 7.5rem);
   }
 
   .ap-signal-thumb {
-    width: min(70%, 17rem);
-    opacity: 0.38;
+    width: min(62%, 14rem);
+    opacity: 0.32;
   }
 
   .ap-observatory-row-with-media {
@@ -635,6 +676,16 @@ textarea {
 
   .ap-signal-thumb-row {
     width: min(72%, 20rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-signal-flip-card.is-flipping .ap-signal-flip-inner {
+    animation: none;
+  }
+
+  .ap-signal-progress {
+    display: none;
   }
 }
 
@@ -649,6 +700,33 @@ textarea {
 
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes ap-signal-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ap-signal-x-flip {
+  0% {
+    transform: rotateX(0deg);
+  }
+
+  48% {
+    opacity: 0.42;
+    transform: rotateX(-84deg) translateY(-2px);
+  }
+
+  52% {
+    opacity: 0.42;
+    transform: rotateX(84deg) translateY(2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
   }
 }
 

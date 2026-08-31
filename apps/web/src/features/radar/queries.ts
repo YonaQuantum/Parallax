@@ -50,11 +50,13 @@ const timeFormatter = new Intl.DateTimeFormat("zh-CN", {
 
 export async function getWorldSignals({
   balanced = false,
+  requireLocalized = false,
   query,
   domain,
   take = 8
 }: {
   balanced?: boolean;
+  requireLocalized?: boolean;
   query?: string;
   domain?: KnowledgeDomain;
   take?: number;
@@ -65,6 +67,7 @@ export async function getWorldSignals({
       interference: {
         not: KnowledgeInterference.BLOCKED
       },
+      deepArchivedAt: null,
       ...(domain ? { domain } : {}),
       ...(keyword
         ? {
@@ -101,11 +104,11 @@ export async function getWorldSignals({
 
   const orderedArtifacts = balanced && !keyword ? balanceArtifactsByDomain(artifacts, take) : artifacts;
 
-  return orderedArtifacts.map((artifact): WorldSignal => {
+  const mappedSignals = orderedArtifacts.map((artifact): WorldSignal => {
     const metadata = asRecord(artifact.metadata);
     return {
       id: `artifact-${artifact.id}`,
-      title: readString(metadata, "displayTitle") ?? artifact.title,
+      title: readSignalTitle(metadata, artifact.title),
       summary: readSignalSummary(metadata, artifact.domain),
       href: artifact.url,
       thumbnailUrl: readUrl(metadata, "thumbnailUrl"),
@@ -123,6 +126,10 @@ export async function getWorldSignals({
         : [domainTagName[artifact.domain]]
     };
   });
+
+  return requireLocalized
+    ? mappedSignals.filter((signal) => hasChinese(signal.title) && Boolean(signal.summary))
+    : mappedSignals;
 }
 
 function balanceArtifactsByDomain<T extends { domain: KnowledgeDomain }>(artifacts: T[], take: number) {
@@ -206,18 +213,37 @@ function readSignalSummary(record: Record<string, unknown> | null, domain: Knowl
 }
 
 function isReadableSummary(value: string) {
-  return /[\u4e00-\u9fff]/.test(value) && !/进\s*入\s*视\s*野/.test(value);
+  return hasChinese(value) && !isGeneratedFallback(value);
 }
 
 const domainFallbackSummary: Record<KnowledgeDomain, string> = {
-  CODE: "先看工具链价值：可运行性、维护状态、文档和社区采用。",
-  AI_MODELS: "先看真实能力：模型来源、评测证据、许可和本地可复用性。",
-  GAME_INTERACTION: "先看可玩性：机制、原型成本和能否转成工作室实验。",
-  HARDWARE_EMBEDDED: "先看可复现性：物料、成本、安全性和工程约束。",
-  CREATIVE_MEDIA: "先看表达空间：工具链、声音/图形流程和作品转化。",
-  SCIENCE_COSMOS: "先看证据：来源、观测边界，以及它能打开的问题。",
-  GENERAL: "保留为线索，等待更多来源交叉验证。"
+  CODE: "关注工具链价值、维护状态、文档质量和社区采用。",
+  AI_MODELS: "关注模型来源、评测证据、许可和本地复用价值。",
+  GAME_INTERACTION: "关注机制设计、原型成本和工作室实验价值。",
+  HARDWARE_EMBEDDED: "关注物料、成本、安全性和工程可复现性。",
+  CREATIVE_MEDIA: "关注工具链、声音/图形流程和作品转化空间。",
+  SCIENCE_COSMOS: "关注来源证据、观测边界和长期问题价值。",
+  GENERAL: "保留线索，等待更多来源交叉验证。"
 };
+
+function readSignalTitle(record: Record<string, unknown> | null, rawTitle: string) {
+  const displayTitle = readString(record, "displayTitle");
+
+  if (site.locale === "zh-CN" && displayTitle && hasChinese(displayTitle)) {
+    return displayTitle;
+  }
+
+  return rawTitle;
+}
+
+function hasChinese(value: string) {
+  return /[\u4e00-\u9fff]/.test(value);
+}
+
+function isGeneratedFallback(value: string) {
+  return /进\s*入\s*视\s*野/.test(value) ||
+    /^可能(影响|扩展|连接|为|成为|提供|给|对)/.test(value);
+}
 
 function readUrl(record: Record<string, unknown> | null, key: string) {
   const value = readString(record, key);
