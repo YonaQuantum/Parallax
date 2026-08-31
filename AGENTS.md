@@ -20,6 +20,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Node 开发环境优先使用 `.tools/node` 和 `.cache/npm`。
 - 修改数据库模型时，同步更新 `packages/db/prisma` 下的 Prisma migration 和 `docs/architecture.md`。
 - 修改部署方式时，同步更新 `docs/deployment-1panel.md`。
+- 修改首页、Radar、领域入口和核心中文文案前，先阅读 `MEMORY.md` 与 `docs/product-memory.md`。
 - 遇到新的开发坑、迁移折中、提交身份或隐私风险时，同步更新 `docs/development-handbook.md`。
 - 插件、主题、内容块和平台集成应尽量通过清晰的扩展点进入系统。
 

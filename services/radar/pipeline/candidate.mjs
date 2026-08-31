@@ -257,13 +257,13 @@ export function domainLabel(domain) {
 
 export function defaultWhyItMatters(domain) {
   const text = {
-    CODE: "可能影响开源工程、工具链或开发实践。",
-    AI_MODELS: "可能影响模型、推理、训练或智能体工作流。",
-    GAME_INTERACTION: "可能为游戏技术、实时模拟或交互设计提供线索。",
-    HARDWARE_EMBEDDED: "可能连接软件、硬件和可实际制作的技术实践。",
-    CREATIVE_MEDIA: "可能为创作工具、声音、图形或媒体工作流提供参考。",
-    SCIENCE_COSMOS: "可能扩展社区对科学、宇宙和长期问题的观察。",
-    GENERAL: "可能成为社区讨论或后续研究的线索。"
+    CODE: "关注工具链价值、维护状态、文档质量和社区采用。",
+    AI_MODELS: "关注模型来源、评测证据、许可和本地复用价值。",
+    GAME_INTERACTION: "关注机制设计、原型成本和工作室实验价值。",
+    HARDWARE_EMBEDDED: "关注物料、成本、安全性和工程可复现性。",
+    CREATIVE_MEDIA: "关注工具链、声音/图形流程和作品转化空间。",
+    SCIENCE_COSMOS: "关注来源证据、观测边界和长期问题价值。",
+    GENERAL: "保留线索，等待更多来源交叉验证。"
   };
 
   return text[domain] ?? text.GENERAL;
