@@ -475,11 +475,32 @@ textarea {
   color: rgba(242, 245, 255, 0.94);
 }
 
-.ap-domain-index-head p {
-  max-width: 28rem;
+.ap-domain-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 3rem;
+  border-bottom: 1px solid rgba(242, 245, 255, 0.14);
+  color: rgba(242, 245, 255, 0.46);
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.ap-domain-search:focus-within {
+  border-color: rgba(242, 245, 255, 0.34);
+  color: rgba(242, 245, 255, 0.78);
+}
+
+.ap-domain-search input {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  color: rgba(242, 245, 255, 0.86);
   font-size: 0.95rem;
-  line-height: 1.8;
-  color: rgba(242, 245, 255, 0.42);
+  outline: none;
+}
+
+.ap-domain-search input::placeholder {
+  color: rgba(242, 245, 255, 0.32);
 }
 
 .ap-domain-list {
