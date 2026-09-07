@@ -161,6 +161,8 @@ docker compose -f infra/docker/docker-compose.yml exec web npm run db:seed
 
 ## 上线前检查
 
+首发采用开放邮箱注册。统一详情、Signal 评论、账号恢复与管理的现状及验收要求见 [社区融合体验与首发方案](docs/community-launch-plan.md)；方案中的待实施能力不代表已经可用。
+
 - 修改默认所有者邮箱、用户名和密码。
 - 配置 `APP_URL` 为公网 HTTPS 地址。
 - 配置 SMTP，并完成一次真实邮箱验证收信测试。
