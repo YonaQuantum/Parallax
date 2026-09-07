@@ -53,14 +53,18 @@
 
 提交前必须确认本仓库的 Git 作者信息。若没有配置，GitHub 会显示成本机默认身份或临时维护者身份，导致提交无法归属到仓库维护者账号。
 
-当前推荐配置为：
+维护者于 2026-09-07 确认使用 GitHub 账号 `YonaQuantum`。当前仓库配置为：
 
 ```bash
-git config user.name "CrotAA"
-git config user.email "CrotAA@users.noreply.github.com"
+git config --local user.name "YonaQuantum"
+git config --local user.email "128824020+YonaQuantum@users.noreply.github.com"
 ```
 
-如果 GitHub 页面仍不能把提交归属到账号，需要在 GitHub 的 Email settings 中复制准确的 no-reply 邮箱，再更新本地仓库配置。
+该 no-reply 邮箱与本机既有全局邮箱配置一致，账号数字 ID 已通过 GitHub 用户 API 核对。GitHub 根据提交邮箱关联账号，仅修改显示名称或 SSH 推送账号不会修复归属。后续若账号邮箱设置变化，以 GitHub 的 Email settings 中准确的 no-reply 邮箱为准。
+
+本次问题来自仓库 `.git/config` 的旧身份覆盖全局配置，且旧手册重复推荐了该身份。提交前使用 `git config --show-origin --get-regexp 'user\.(name|email)'` 检查实际来源，不再沿用旧配置。
+
+2026-09-07 已备份并修正本地 `main` 的 16 个旧身份提交，作者与提交者统一为维护者身份，保留各次提交的文件树、提交说明及原始时间。备份位于本地 `.git/identity-backups/before-yonaquantum.bundle`，不进入 Git。公开历史同步必须先明确协作者影响，推送时使用指定远端旧提交的 `--force-with-lease`，不能使用无保护的 `--force`。
 
 已经被他人 clone 或 fork 的公开历史不应随意重写。只有在仓库刚初始化、确认没有协作者基于旧历史工作时，才可以修正提交作者并 force push。
 
